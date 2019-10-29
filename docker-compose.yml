@@ -1,0 +1,9 @@
+version: '3'
+services:
+  postgres:
+    image: "postgres:9.6"
+    ports:
+      - "8092:5432"
+    environment:
+      POSTGRES_PASSWORD: "c4ef37c0fbd747da1c63c0f87d7c62df"
+      POSTGRES_DB: "jogitdev"

@@ -28,6 +28,13 @@ def doOnChange = './gradlew classes'
 
 dependencies {
   implementation "io.vertx:vertx-web:$vertxVersion"
+  implementation "io.vertx:vertx-auth-jdbc:$vertxVersion"
+  compile "io.vertx:vertx-pg-client:$vertxVersion"
+// https://mvnrepository.com/artifact/postgresql/postgresql
+  compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
+
+// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+  compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 }
 
 

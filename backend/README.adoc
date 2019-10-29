@@ -1,8 +1,35 @@
-= Starter
+= Jogit
 
-image:https://img.shields.io/badge/vert.x-4.0.0-milestone3-purple.svg[link="https://vertx.io"]
+Basically a bad toy Gitlab/Github. Not scallable and not secure.
 
-This application was generated using http://start.vertx.io
+== Setup for development (without Docker)
+These are the steps required to manually setup a Linux server for the application.
+
+=== Install openssh-server
+The application requires SSH access, so that users can
+access their git repositories.
+
+If installing openssh-server on your own computer, make sure your
+port 22 is NOT open, so that nobody can access your computer
+using SSH from outside.
+
+```
+sudo apt install openssh-server
+```
+
+=== Create the application directory structure
+```
+mkdir /srv/jogit
+mkdir /srv/jogit/git
+```
+
+=== Running the database
+```
+docker-compose up
+```
+
+=== Setup the database schema
+Run schema/schema.sql.
 
 == Building
 
@@ -21,11 +48,75 @@ To run your application:
 ./gradlew clean run
 ```
 
-== Help
+== Debugging in IntelliJ
+Setup a new configuration:
 
-* https://vertx.io/docs/[Vert.x Documentation]
-* https://stackoverflow.com/questions/tagged/vert.x?sort=newest&pageSize=15[Vert.x Stack Overflow]
-* https://groups.google.com/forum/?fromgroups#!forum/vertx[Vert.x User Group]
-* https://gitter.im/eclipse-vertx/vertx-users[Vert.x Gitter]
+- Type: Application
+- Main class: io.vertx.core.Launcher
+- Program arguments: run com.example.starter.MainVerticle --conf conf.secret.json
 
+== How to setup a git repository accessible through SSH
+These steps are done (or will be done...) by the application when creating a user
+and creating repositories.
+
+=== Create a git user
+```
+sudo adduser gituser
+su gituser
+cd
+mkdir .ssh && chmod 700 .ssh
+touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys
+exit
+```
+Warning: if the .ssh folder and its children are not the property of gituser:gituser,
+login using SSH will always ask for the user's password.
+
+====Create a repository
+Create the folder and init the git repository:
+```
+cd /srv/jogit/git
+mkdir gituser
+sudo chown -R gituser:gituser gituser
+cd gituser
+su gituser
+cd /srv/jogit/git/gituser
+mkdir testrepository.git
+cd testrepository.git
+git init --bare
+exit
+```
+
+Create a user group for all groups that are allowed to write to the repository:
+```
+sudo groupadd testrepository
+sudo chown -R gituser:testrepository testrepository.git
+sudo usermod -a -G testrepository gituser
+```
+
+=== Add your own public key to the git user's authorized_keys
+```
+sudo bash -c 'cat ~/.ssh/id_rsa.pub >> /home/gituser/.ssh/authorized_keys'
+```
+
+=== Disallow accessing the shell as the git user
+
+```
+sudo chsh gituser -s $(which git-shell)
+```
+
+=== Disallow port forwarding
+Prepend this to the entry in /home/git/authorized_keys:
+```
+no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty
+```
+
+=== Use the repository
+```
+git clone gituser@localhost:/srv/jogit/git/testuser/testrepository.git
+cd testrepository
+touch README
+git add .
+git commit -am "create README file"
+git push
+```
 
