@@ -2,17 +2,38 @@ plugins {
   id 'java'
   id 'application'
   id 'com.github.johnrengelman.shadow' version '5.0.0'
+  id 'com.google.protobuf' version '0.8.8'
 }
 
 group = 'com.example'
 version = '1.0.0-SNAPSHOT'
+
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:3.10.0"
+  }
+  plugins {
+    grpc {
+      //artifact = 'io.grpc:protoc-gen-grpc-java:1.24.0'
+      artifact = "io.vertx:protoc-gen-grpc-java:1.20.0"
+    }
+  }
+  generateProtoTasks {
+    all()*.plugins {
+      grpc {
+        outputSubDir = 'java'
+      }
+    }
+  }
+  generatedFilesBaseDir = "$projectDir/src"
+}
 
 repositories {
   mavenCentral()
 }
 
 ext {
-  vertxVersion = '4.0.0-milestone3'
+  vertxVersion = '3.8.3'
   junitJupiterEngineVersion = '5.4.0'
 }
 
@@ -30,11 +51,24 @@ dependencies {
   implementation "io.vertx:vertx-web:$vertxVersion"
   implementation "io.vertx:vertx-auth-jdbc:$vertxVersion"
   compile "io.vertx:vertx-pg-client:$vertxVersion"
+
+// https://mvnrepository.com/artifact/io.vertx/vertx-grpc
+  compile group: 'io.vertx', name: 'vertx-grpc', version: '3.8.3'
 // https://mvnrepository.com/artifact/postgresql/postgresql
   compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
 
 // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+  implementation 'io.grpc:grpc-netty-shaded:1.24.0'
+  implementation 'io.grpc:grpc-protobuf:1.24.0'
+  implementation 'io.grpc:grpc-stub:1.24.0'
+
+// https://mvnrepository.com/artifact/io.vertx/vertx-junit5
+  testCompile group: 'io.vertx', name: 'vertx-junit5', version: '3.8.3'
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+
+// https://mvnrepository.com/artifact/org.assertj/assertj-core
+  testCompile group: 'org.assertj', name: 'assertj-core', version: '3.14.0'
 }
 
 

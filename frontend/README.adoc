@@ -1,0 +1,13 @@
+=== Setup
+==== Install Protoc
+https://github.com/protocolbuffers/protobuf/releases
+
+==== Install gRPC web protoc plugin
+https://github.com/grpc/grpc-web#code-generator-plugin
+
+=== Generating gRPC client files
+```
+protoc --proto_path=../backend/src/main/proto/ ../backend/src/main/proto/service.proto \
+--grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:src/app/grpc \
+--js_out=import_style=commonjs:src/app/grpc
+```

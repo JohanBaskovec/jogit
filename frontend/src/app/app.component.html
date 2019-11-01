@@ -1,0 +1,3 @@
+<span *ngIf="serverResponse">Server responded "{{serverResponse}}"</span>
+<span *ngIf="serverError">Error during request. Code {{serverError.code}}, message: {{serverError.message}}</span>
+<router-outlet></router-outlet>

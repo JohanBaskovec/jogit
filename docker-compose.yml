@@ -1,5 +1,6 @@
 version: '3'
 services:
+  # The container automatically runs postgres and create a database and user
   postgres:
     image: "postgres:9.6"
     ports:
@@ -7,3 +8,17 @@ services:
     environment:
       POSTGRES_PASSWORD: "c4ef37c0fbd747da1c63c0f87d7c62df"
       POSTGRES_DB: "jogitdev"
+  front-envoy:
+    build:
+      context: .
+      dockerfile: Dockerfile-frontenvoy
+    volumes:
+      - ./front-envoy.yaml:/etc/front-envoy.yaml
+    expose:
+      - "8080"
+      - "9902"
+    ports:
+      - "8080:8080"
+      - "9902:9902"
+    # makes localhost available to Envoy
+    network_mode: "host"

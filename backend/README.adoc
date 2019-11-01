@@ -1,8 +1,8 @@
 = Jogit
 
-Basically a bad toy Gitlab/Github. Not scallable and not secure.
+A bad toy git web interface. Not scallable and not secure.
 
-== Setup for development (without Docker)
+== Setup for development
 These are the steps required to manually setup a Linux server for the application.
 
 === Install openssh-server
@@ -23,27 +23,37 @@ mkdir /srv/jogit
 mkdir /srv/jogit/git
 ```
 
-=== Running the database
+=== Running the database and the Envoy proxy
 ```
 docker-compose up
 ```
+
+Docker compose will:
+
+- run Postgres, create a database "jogitdev" and a user "postgres" with password
+"c4ef37c0fbd747da1c63c0f87d7c62df".
+- run the Envoy proxy, required for gRPC web.
+
+When the deployment is successful, you can access Envoy's
+admin interface at localhost:9902, and the backend server
+at localhost:8080
 
 === Setup the database schema
 Run schema/schema.sql.
 
 == Building
 
-To launch your tests:
+=== Generate gRPC code & build
+```
+./gradlew build
+```
+
+=== Launch tests
 ```
 ./gradlew clean test
 ```
 
-To package your application:
-```
-./gradlew clean assemble
-```
-
-To run your application:
+=== Run the application
 ```
 ./gradlew clean run
 ```
@@ -71,7 +81,7 @@ exit
 Warning: if the .ssh folder and its children are not the property of gituser:gituser,
 login using SSH will always ask for the user's password.
 
-====Create a repository
+=== Create a repository
 Create the folder and init the git repository:
 ```
 cd /srv/jogit/git
