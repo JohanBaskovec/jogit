@@ -18,4 +18,16 @@ public interface HelloRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getNameBytes();
+
+  /**
+   * <code>string sessionToken = 2;</code>
+   * @return The sessionToken.
+   */
+  java.lang.String getSessionToken();
+  /**
+   * <code>string sessionToken = 2;</code>
+   * @return The bytes for sessionToken.
+   */
+  com.google.protobuf.ByteString
+      getSessionTokenBytes();
 }

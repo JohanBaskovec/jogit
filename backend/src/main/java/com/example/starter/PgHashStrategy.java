@@ -59,20 +59,6 @@ public interface PgHashStrategy {
   String computeHash(String password, String salt, int version);
 
   /**
-   * Retrieve the hashed password from the result of the authentication query
-   * @param row  the row
-   * @return  the hashed password
-   */
-  String getHashedStoredPwd(Row row);
-
-  /**
-   * Retrieve the salt from the result of the authentication query
-   * @param row  the row
-   * @return  the salt
-   */
-  String getSalt(Row row);
-
-  /**
    * Sets a ordered list of nonces where each position corresponds to a version.
    *
    * The nonces are supposed not to be stored in the underlying jdbc storage but to

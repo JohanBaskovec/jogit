@@ -35,16 +35,6 @@ public abstract class AbstractPgHashingStrategy implements PgHashStrategy {
   }
 
   @Override
-  public String getHashedStoredPwd(Row row) {
-    return row.getString(0);
-  }
-
-  @Override
-  public String getSalt(Row row) {
-    return row.getString(1);
-  }
-
-  @Override
   public void setNonces(JsonArray nonces) {
     this.nonces = nonces;
   }

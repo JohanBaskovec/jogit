@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.starter.gprc";
+option java_outer_classname = "LogoutProto";
+package helloworld;
+
+service Logout {
+  rpc Logout (LogoutRequest) returns (LogoutReply) {}
+}
+
+message LogoutRequest {
+  string sessionToken = 1;
+}
+
+message LogoutReply {
+}

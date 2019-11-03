@@ -6,11 +6,11 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class RepositoryService {
+public class GitRepositoryService {
   public static final Path repositoryRoot = Paths.get("/srv/jogit/git");
   String password;
 
-  RepositoryService(String rootPassword) {
+  GitRepositoryService(String rootPassword) {
     this.password = rootPassword + "\n";
   }
 

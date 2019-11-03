@@ -5,11 +5,11 @@ import io.vertx.ext.web.RoutingContext;
 
 public class CreateRepositoryHandler implements Handler<RoutingContext> {
   private final RandomService randomService;
-  private final RepositoryService repositoryService;
+  private final GitRepositoryService gitRepositoryService;
 
-  public CreateRepositoryHandler(RandomService randomService, RepositoryService repositoryService) {
+  public CreateRepositoryHandler(RandomService randomService, GitRepositoryService gitRepositoryService) {
     this.randomService = randomService;
-    this.repositoryService = repositoryService;
+    this.gitRepositoryService = gitRepositoryService;
   }
 
   @Override
@@ -17,7 +17,7 @@ public class CreateRepositoryHandler implements Handler<RoutingContext> {
     String repositoryUser = rc.user().principal().getString("username");
     String repositoryName = randomService.getRandomString(20);
     // TODO: make async
-    repositoryService.createRepository(repositoryUser, repositoryName);
+    gitRepositoryService.createRepository(repositoryUser, repositoryName);
     rc.response().setStatusCode(202).end();
   }
 }
