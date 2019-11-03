@@ -47,10 +47,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
           if (PgHashStrategy.isEqual(user.getPassword(), hashedPassword)) {
             resultHandler.handle(Future.succeededFuture(user));
           } else {
-            resultHandler.handle(Future.failedFuture("Invalid username/password"));
+            resultHandler.handle(Future.succeededFuture(null));
           }
         } else {
-          resultHandler.handle(Future.failedFuture("Invalid username/password"));
+          resultHandler.handle(Future.succeededFuture(null));
         }
       });
   }

@@ -39,7 +39,6 @@ public class MainVerticle extends AbstractVerticle {
     AuthenticationService authService = new AuthenticationServiceImpl(vertx);
 
     UserRepositoryFactory userRepositoryFactory = new UserRepositoryFactory(userService);
-    GreeterEndpoint greeterEndpoint = new GreeterEndpoint(pgClient, sessionRepositoryFactory);
     RegisterEndpoint registerEndpoint = new RegisterEndpoint(pgClient, userRepositoryFactory, authService);
     LoginEndpoint loginEndpoint = new LoginEndpoint(
       pgClient,
@@ -51,7 +50,6 @@ public class MainVerticle extends AbstractVerticle {
 
     VertxServer rpcServer = VertxServerBuilder
       .forAddress(vertx, "localhost", 8888)
-      .addService(greeterEndpoint)
       .addService(registerEndpoint)
       .addService(loginEndpoint)
       .build();
