@@ -51,26 +51,29 @@ dependencies {
   implementation "io.vertx:vertx-auth-jdbc:$vertxVersion"
   compile "io.vertx:vertx-pg-client:$vertxVersion"
 
-// https://mvnrepository.com/artifact/io.vertx/vertx-grpc
+  // https://mvnrepository.com/artifact/io.vertx/vertx-grpc
   compile group: 'io.vertx', name: 'vertx-grpc', version: '3.8.3'
-// https://mvnrepository.com/artifact/postgresql/postgresql
+  // https://mvnrepository.com/artifact/postgresql/postgresql
   compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
 
-// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+  // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
   implementation 'io.grpc:grpc-netty-shaded:1.24.0'
   implementation 'io.grpc:grpc-protobuf:1.24.0'
   implementation 'io.grpc:grpc-stub:1.24.0'
 
-// https://mvnrepository.com/artifact/io.vertx/vertx-junit5
+  // https://mvnrepository.com/artifact/io.vertx/vertx-junit5
   testCompile group: 'io.vertx', name: 'vertx-junit5', version: '3.8.3'
   testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
 
-// https://mvnrepository.com/artifact/org.assertj/assertj-core
+  // https://mvnrepository.com/artifact/org.assertj/assertj-core
   testCompile group: 'org.assertj', name: 'assertj-core', version: '3.14.0'
 
   // https://mvnrepository.com/artifact/com.google.guava/guava
   compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+
+  // https://mvnrepository.com/artifact/org.mockito/mockito-all
+  testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
 }
 
 

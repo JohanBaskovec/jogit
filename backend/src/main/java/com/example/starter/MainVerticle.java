@@ -1,12 +1,7 @@
 package com.example.starter;
 
-import io.grpc.Metadata;
-import io.grpc.ServerCall;
-import io.grpc.ServerCallHandler;
-import io.grpc.ServerInterceptor;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.PRNG;
@@ -21,14 +16,18 @@ public class MainVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) throws IOException {
-    fileSystemService = new FileSystemService();
     PRNG prng = new PRNG(vertx);
     RandomService randomService = new RandomService();
     String confFilePath = System.getenv("JOGIT_CONF");
     JsonObject config = new JsonObject(vertx.fileSystem().readFileBlocking(confFilePath));
     DatabaseService databaseService = new DatabaseService();
     String rootPassword = config.getString("rootPassword");
-    GitRepositoryService gitRepositoryService = new GitRepositoryService(rootPassword);
+    ProcessExecutorAsRoot processExecutorAsRoot = new ProcessExecutorAsRootImpl(rootPassword);
+    fileSystemService = new FileSystemServiceImpl(processExecutorAsRoot);
+    GitRepositoryService gitRepositoryService = new GitRepositoryService(
+      fileSystemService,
+      processExecutorAsRoot
+    );
     PgPool pgClient = databaseService.newPgPool(vertx, config.getJsonObject("database"));
 
     UserService userService = new UserService();
