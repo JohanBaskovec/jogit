@@ -2,6 +2,7 @@ package com.example.starter;
 
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
@@ -31,8 +32,13 @@ public class IntegrationTest {
     }
     if (!serverStarted) {
       vertx = Vertx.vertx();
-      String confFilePath = System.getenv("JOGIT_CONF");
+      String confFilePath = System.getenv("JOGIT_TEST_CONF");
       JsonObject config = new JsonObject(vertx.fileSystem().readFileBlocking(confFilePath));
+      Integer port = config.getJsonObject("server").getInteger("port");
+      if (port == null) {
+        testContext.failNow(new RuntimeException("port must not be null."));
+        return;
+      }
       DatabaseService databaseService = new DatabaseService();
       pgClient = databaseService.newPgPool(vertx, config.getJsonObject("database"));
       VertxTestContext finalTestContext = testContext;
@@ -42,11 +48,13 @@ public class IntegrationTest {
           System.out.println("deleted everything.");
           transaction.commit(finalTestContext.succeeding(transactionCommit -> {
             System.out.println("transaction commited.");
-            vertx.deployVerticle(new MainVerticle(), finalTestContext.succeeding(id -> {
+            DeploymentOptions deploymentOptions = new DeploymentOptions();
+            deploymentOptions.setConfig(config);
+            vertx.deployVerticle(new MainVerticle(), deploymentOptions, finalTestContext.succeeding(id -> {
               System.out.println("deployed vertice");
               serverStarted = true;
               channel = VertxChannelBuilder
-                .forAddress(vertx, "localhost", 8888)
+                .forAddress(vertx, "localhost", port)
                 .usePlaintext(true)
                 .build();
               handler.handle(channel);

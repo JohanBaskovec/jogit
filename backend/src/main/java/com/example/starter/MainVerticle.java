@@ -19,8 +19,11 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws IOException {
     PRNG prng = new PRNG(vertx);
     RandomService randomService = new RandomService();
-    String confFilePath = System.getenv("JOGIT_CONF");
-    JsonObject config = new JsonObject(vertx.fileSystem().readFileBlocking(confFilePath));
+    JsonObject config = vertx.getOrCreateContext().config();
+    if  (config == null) {
+      String confFilePath = System.getenv("JOGIT_CONF");
+      config = new JsonObject(vertx.fileSystem().readFileBlocking(confFilePath));
+    }
     DatabaseService databaseService = new DatabaseService();
     String rootPassword = config.getString("rootPassword");
     ProcessExecutorAsRoot processExecutorAsRoot = new ProcessExecutorAsRootImpl(rootPassword);
@@ -49,8 +52,13 @@ public class MainVerticle extends AbstractVerticle {
     );
     SessionEndpoint sessionEndpoint = new SessionEndpoint(pgClient, sessionRepositoryFactory);
 
+    Integer port = config.getJsonObject("server").getInteger("port");
+    if (port == null) {
+      startPromise.fail("port must not be null.");
+      return;
+    }
     VertxServer rpcServer = VertxServerBuilder
-      .forAddress(vertx, "localhost", 8888)
+      .forAddress(vertx, "localhost", port)
       .addService(registerEndpoint)
       .addService(loginEndpoint)
       .addService(sessionEndpoint)
@@ -60,7 +68,7 @@ public class MainVerticle extends AbstractVerticle {
       (AsyncResult<Void> rpcServerStart) -> {
         if (rpcServerStart.succeeded()) {
           startPromise.complete();
-          System.out.println("Server started on port 8888");
+          System.out.println("Server started on port " + port);
         } else {
           startPromise.fail(rpcServerStart.cause());
         }
