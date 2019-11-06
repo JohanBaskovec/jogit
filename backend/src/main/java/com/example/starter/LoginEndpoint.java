@@ -6,7 +6,9 @@ import com.example.starter.gprc.LoginRequest;
 import com.example.starter.gprc.Session;
 import com.example.starter.gprc.User;
 import io.grpc.Status;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Transaction;
 
@@ -40,7 +42,7 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
           userRepositoryFactory.get(transaction),
           request,
           new AuthenticationHandler(
-            future,
+            handler,
             transaction,
             sessionRepositoryFactory,
             sessionService
@@ -55,12 +57,12 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
     private final SessionService sessionService;
 
     AuthenticationHandler(
-      Future<LoginReply> future,
+      Handler<AsyncResult<LoginReply>> handler,
       Transaction transaction,
       SessionRepositoryFactory sessionRepositoryFactory,
       SessionService sessionService
     ) {
-      super(future, transaction);
+      super(handler, transaction);
       this.sessionRepositoryFactory = sessionRepositoryFactory;
       this.sessionService = sessionService;
     }
@@ -68,7 +70,7 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
     @Override
     public void handleSuccess(User user) {
       if (user == null) {
-        future.fail(Status.UNAUTHENTICATED.withDescription("Invalid username or password").asRuntimeException());
+        handler.handle(Future.failedFuture(Status.UNAUTHENTICATED.withDescription("Invalid username or password").asRuntimeException()));
         return;
       }
 
@@ -78,14 +80,14 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
         .setUser(user)
         .setUserUsername(user.getUsername())
         .build();
-      sessionRepository.insert(session, new InsertSessionHandler(future, transaction, session));
+      sessionRepository.insert(session, new InsertSessionHandler(handler, transaction, session));
     }
   }
 
   private static class InsertSessionHandler extends ErrorHandlerWithTransaction<Void, LoginReply> {
     private final Session session;
 
-    InsertSessionHandler(Future<LoginReply> future, Transaction transaction, Session session) {
+    InsertSessionHandler(Handler<AsyncResult<LoginReply>> future, Transaction transaction, Session session) {
       super(future, transaction);
       this.session = session;
     }
@@ -95,7 +97,7 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
       transaction.commit();
       // TODO: find a way to put the session token in a httponly cookie
       // TODO: do not return user's password and salt!
-      future.complete(LoginReply.newBuilder().setSession(session).build());
+      handler.handle(Future.succeededFuture(LoginReply.newBuilder().setSession(session).build()));
     }
   }
 }

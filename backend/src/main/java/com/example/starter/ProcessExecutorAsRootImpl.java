@@ -3,6 +3,7 @@ package com.example.starter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProcessExecutorAsRootImpl implements ProcessExecutorAsRoot {
   private final String rootPassword;
@@ -19,9 +20,15 @@ public class ProcessExecutorAsRootImpl implements ProcessExecutorAsRoot {
    * @param processBuilder
    */
   public void execute(ProcessBuilder processBuilder) {
+    execute(processBuilder, null);
+  }
+
+  public void execute(ProcessBuilder processBuilder, List<String> inputStrings) {
     try {
       ArrayList<String> commandWords = new ArrayList<>();
-      commandWords.add("sudo -S");
+      // -k forces the user to type their password even if they did it recently
+      commandWords.add("sudo");
+      commandWords.add("-kS");
       commandWords.addAll(processBuilder.command());
       processBuilder.command(commandWords);
 
@@ -31,8 +38,17 @@ public class ProcessExecutorAsRootImpl implements ProcessExecutorAsRoot {
       OutputStream os = process.getOutputStream();
       os.write(rootPassword.getBytes());
       os.write("\n".getBytes());
+      if (inputStrings != null) {
+        for (String string : inputStrings) {
+          os.write(string.getBytes());
+          os.write("\n".getBytes());
+        }
+      }
       os.flush();
       process.waitFor();
+      if (process.exitValue() != 0) {
+        throw new RuntimeException("Exception while executing process.");
+      }
     } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
     }

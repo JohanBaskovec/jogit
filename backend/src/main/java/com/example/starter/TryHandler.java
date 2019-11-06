@@ -1,14 +1,13 @@
 package com.example.starter;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
 public abstract class TryHandler<T, U> implements Handler<AsyncResult<T>> {
-  protected final Future<U> future;
+  protected final Handler<AsyncResult<U>> handler;
 
-  TryHandler(Future<U> future) {
-    this.future = future;
+  TryHandler(Handler<AsyncResult<U>> handler) {
+    this.handler = handler;
   }
 
   @Override

@@ -42,7 +42,7 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
 
     processExecutorAsRoot.execute(new ProcessBuilder()
-      .command("mkdir" + directory.getAbsolutePath()));
+      .command("mkdir", directory.getAbsolutePath()));
   }
 
   public void changeOwnerAndGroup(String userName, String group, File directory) {
@@ -60,7 +60,7 @@ public class FileSystemServiceImpl implements FileSystemService {
     }
     processExecutorAsRoot.execute(
       new ProcessBuilder()
-        .command("chown -R" + userName + ":" + group + directory.getAbsolutePath())
+        .command("chown", "-R", userName + ":" + group, directory.getAbsolutePath())
     );
   }
 

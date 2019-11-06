@@ -4,6 +4,8 @@ import com.example.starter.gprc.RegisterGrpc;
 import com.example.starter.gprc.RegisterReply;
 import com.example.starter.gprc.RegisterRequest;
 import com.example.starter.gprc.User;
+import com.google.common.base.Utf8;
+import io.grpc.Status;
 import io.vertx.core.Future;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Transaction;
@@ -24,6 +26,11 @@ class RegisterEndpoint extends RegisterGrpc.RegisterVertxImplBase {
 
   @Override
   public void register(RegisterRequest request, Future<RegisterReply> future) {
+    int userNameUtf8Length = Utf8.encodedLength(request.getUsername());
+    if (userNameUtf8Length > 32) {
+      future.fail(Status.INVALID_ARGUMENT.asRuntimeException());
+      return;
+    }
     pgClient.begin(new ErrorHandler<Transaction, RegisterReply>(future) {
       @Override
       public void handleSuccess(Transaction transaction) {
@@ -35,10 +42,10 @@ class RegisterEndpoint extends RegisterGrpc.RegisterVertxImplBase {
           .setPasswordSalt(salt)
           .build();
         UserRepository userRepository = userRepositoryFactory.get(transaction);
-        userRepository.insert(user, new ErrorHandlerWithTransaction<Void, RegisterReply>(future, transaction) {
+        userRepository.insert(user, new ErrorHandlerWithTransaction<Void, RegisterReply>(handler, transaction) {
           @Override
           public void handleSuccess(Void result) {
-            future.complete(RegisterReply.newBuilder().build());
+            handler.handle(Future.succeededFuture(RegisterReply.newBuilder().build()));
             transaction.commit();
           }
         });

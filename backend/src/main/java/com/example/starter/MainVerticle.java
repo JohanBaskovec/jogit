@@ -41,7 +41,8 @@ public class MainVerticle extends AbstractVerticle {
     );
     AuthenticationService authService = new AuthenticationServiceImpl(vertx);
 
-    UserRepositoryFactory userRepositoryFactory = new UserRepositoryFactory(userService);
+    LinuxService linuxService = new LinuxService(processExecutorAsRoot);
+    UserRepositoryFactory userRepositoryFactory = new UserRepositoryFactory(userService, linuxService);
     RegisterEndpoint registerEndpoint = new RegisterEndpoint(pgClient, userRepositoryFactory, authService);
     LoginEndpoint loginEndpoint = new LoginEndpoint(
       pgClient,

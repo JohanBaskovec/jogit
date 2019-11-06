@@ -1,13 +1,15 @@
 package com.example.starter;
 
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.sqlclient.Transaction;
 
 public abstract class ErrorHandlerWithTransaction<T, U> extends ErrorHandler<T, U> {
   protected final Transaction transaction;
 
-  ErrorHandlerWithTransaction(Future<U> future, Transaction transaction) {
-    super(future);
+  ErrorHandlerWithTransaction(Handler<AsyncResult<U>> handler, Transaction transaction) {
+    super(handler);
     this.transaction = transaction;
   }
 

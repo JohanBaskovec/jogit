@@ -17,6 +17,7 @@ public class UserRepository {
   private static String insertQuery;
   private final Transaction transaction;
   private final UserService userService;
+  private final LinuxService linuxService;
 
   static {
     try {
@@ -29,27 +30,21 @@ public class UserRepository {
 
   UserRepository(
     Transaction transaction,
-    UserService userService
+    UserService userService,
+    LinuxService linuxService
   ) {
     this.transaction = transaction;
     this.userService = userService;
+    this.linuxService = linuxService;
   }
 
   void getByUsername(String username, Handler<AsyncResult<User>> handler) {
     transaction.preparedQuery(
       selectByUsernameQuery,
       Tuple.of(username),
-      new Handler<AsyncResult<RowSet<Row>>>() {
+      new ErrorHandlerWithTransaction<RowSet<Row>, User>(handler, transaction) {
         @Override
-        public void handle(AsyncResult<RowSet<Row>> maybeResult) {
-          if (maybeResult.failed()) {
-            System.out.println(selectByUsernameQuery + " failed.");
-            maybeResult.cause().printStackTrace();
-            handler.handle(Future.failedFuture(maybeResult.cause()));
-            return;
-          }
-
-          RowSet<Row> rows = maybeResult.result();
+        public void handleSuccess(RowSet<Row> rows) {
           if (rows.size() == 0) {
             System.out.println(selectByUsernameQuery + " returned nothing.");
             handler.handle(Future.succeededFuture());
@@ -67,18 +62,16 @@ public class UserRepository {
     transaction.preparedQuery(
       insertQuery,
       Tuple.of(user.getUsername(), user.getPassword(), user.getPasswordSalt()),
-      new Handler<AsyncResult<RowSet<Row>>>() {
+      new ErrorHandlerWithTransaction<RowSet<Row>, Void>(handler, transaction) {
         @Override
-        public void handle(AsyncResult<RowSet<Row>> maybeResult) {
-          // TODO: better error handling when username already used
-          if (maybeResult.failed()) {
-            System.out.println(selectByUsernameQuery + " failed.");
-            maybeResult.cause().printStackTrace();
-            handler.handle(Future.failedFuture(maybeResult.cause()));
-            return;
-          }
-          handler.handle(Future.succeededFuture());
+        public void handleSuccess(RowSet<Row> result) {
+          createLinuxAccount(user, handler);
         }
       });
+  }
+
+  private void createLinuxAccount(User user, Handler<AsyncResult<Void>> handler) {
+    linuxService.createUserAccount(user);
+    handler.handle(Future.succeededFuture());
   }
 }
