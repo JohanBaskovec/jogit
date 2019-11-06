@@ -5,6 +5,8 @@ option java_package = "com.example.starter.gprc";
 option java_outer_classname = "LoginProto";
 package helloworld;
 
+import "session.proto";
+
 service Login {
   rpc Login (LoginRequest) returns (LoginReply) {}
 }
@@ -16,5 +18,5 @@ message LoginRequest {
 }
 
 message LoginReply {
-  string sessionToken = 1;
+  Session session = 1;
 }

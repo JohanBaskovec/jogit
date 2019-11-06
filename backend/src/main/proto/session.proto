@@ -6,6 +6,18 @@ option java_outer_classname = "SessionProto";
 package helloworld;
 import "user.proto";
 
+service SessionService {
+  rpc getCurrentSession(GetCurrentSessionRequest) returns (GetCurrentSessionReply);
+}
+
+message GetCurrentSessionRequest {
+  string sessionToken = 1;
+}
+
+message GetCurrentSessionReply {
+  Session session = 1;
+}
+
 message Session {
   string userUsername = 1;
   string id = 2;

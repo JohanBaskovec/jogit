@@ -1,5 +1,6 @@
 package com.example.starter;
 
+import com.example.starter.gprc.Session;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Promise;
@@ -46,11 +47,13 @@ public class MainVerticle extends AbstractVerticle {
       authService,
       sessionService
     );
+    SessionEndpoint sessionEndpoint = new SessionEndpoint(pgClient, sessionRepositoryFactory);
 
     VertxServer rpcServer = VertxServerBuilder
       .forAddress(vertx, "localhost", 8888)
       .addService(registerEndpoint)
       .addService(loginEndpoint)
+      .addService(sessionEndpoint)
       .build();
 
     rpcServer.start(

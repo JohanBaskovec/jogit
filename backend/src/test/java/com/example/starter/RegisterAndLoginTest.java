@@ -1,13 +1,15 @@
 package com.example.starter;
 
+import com.example.starter.gprc.GetCurrentSessionReply;
+import com.example.starter.gprc.GetCurrentSessionRequest;
 import com.example.starter.gprc.LoginGrpc;
 import com.example.starter.gprc.LoginReply;
 import com.example.starter.gprc.LoginRequest;
 import com.example.starter.gprc.RegisterGrpc;
 import com.example.starter.gprc.RegisterReply;
 import com.example.starter.gprc.RegisterRequest;
+import com.example.starter.gprc.SessionServiceGrpc;
 import io.grpc.Channel;
-import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RegisterAndLoginTest extends IntegrationTest {
   @Test
@@ -47,13 +50,10 @@ class RegisterAndLoginTest extends IntegrationTest {
         }
       });
     });
-    /*
     assertThat(testContext.awaitCompletion(5, TimeUnit.SECONDS)).isTrue();
     if (testContext.failed()) {
       throw testContext.causeOfFailure();
     }
-
-     */
   }
 
   private void tryToLogin(
@@ -69,8 +69,8 @@ class RegisterAndLoginTest extends IntegrationTest {
     LoginGrpc.LoginStub stub = LoginGrpc.newStub(channel);
     stub.login(loginRequest, new StreamObserver<LoginReply>() {
       @Override
-      public void onNext(LoginReply value) {
-        testContext.completeNow();
+      public void onNext(LoginReply loginReply) {
+        getCurrentSession(testContext, channel, loginReply.getSession().getId());
       }
 
       @Override
@@ -83,5 +83,37 @@ class RegisterAndLoginTest extends IntegrationTest {
 
       }
     });
+  }
+
+  private void getCurrentSession(
+    VertxTestContext testContext,
+    Channel channel,
+    String sessionToken
+  ) {
+    GetCurrentSessionRequest getCurrentSessionRequest = GetCurrentSessionRequest
+      .newBuilder()
+      .setSessionToken(sessionToken)
+      .build();
+    SessionServiceGrpc.SessionServiceStub sessionServiceStub = SessionServiceGrpc.newStub(channel);
+    sessionServiceStub.getCurrentSession(getCurrentSessionRequest, new StreamObserver<GetCurrentSessionReply>() {
+      @Override
+      public void onNext(GetCurrentSessionReply value) {
+        testContext.verify(() -> {
+          assertTrue(value.hasSession());
+          testContext.completeNow();
+        });
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        testContext.failNow(t);
+      }
+
+      @Override
+      public void onCompleted() {
+
+      }
+    });
+
   }
 }

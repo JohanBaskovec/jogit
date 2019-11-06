@@ -15,6 +15,16 @@ public final class SessionProto {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_GetCurrentSessionRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_GetCurrentSessionRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_GetCurrentSessionReply_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_GetCurrentSessionReply_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_helloworld_Session_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -29,18 +39,35 @@ public final class SessionProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\rsession.proto\022\nhelloworld\032\nuser.proto\"" +
-      "K\n\007Session\022\024\n\014userUsername\030\001 \001(\t\022\n\n\002id\030\002" +
-      " \001(\t\022\036\n\004user\030\003 \001(\0132\020.helloworld.UserB*\n\030" +
-      "com.example.starter.gprcB\014SessionProtoP\001" +
-      "b\006proto3"
+      "0\n\030GetCurrentSessionRequest\022\024\n\014sessionTo" +
+      "ken\030\001 \001(\t\">\n\026GetCurrentSessionReply\022$\n\007s" +
+      "ession\030\001 \001(\0132\023.helloworld.Session\"K\n\007Ses" +
+      "sion\022\024\n\014userUsername\030\001 \001(\t\022\n\n\002id\030\002 \001(\t\022\036" +
+      "\n\004user\030\003 \001(\0132\020.helloworld.User2o\n\016Sessio" +
+      "nService\022]\n\021getCurrentSession\022$.hellowor" +
+      "ld.GetCurrentSessionRequest\032\".helloworld" +
+      ".GetCurrentSessionReplyB*\n\030com.example.s" +
+      "tarter.gprcB\014SessionProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.example.starter.gprc.UserProto.getDescriptor(),
         });
-    internal_static_helloworld_Session_descriptor =
+    internal_static_helloworld_GetCurrentSessionRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
+    internal_static_helloworld_GetCurrentSessionRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_GetCurrentSessionRequest_descriptor,
+        new java.lang.String[] { "SessionToken", });
+    internal_static_helloworld_GetCurrentSessionReply_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_helloworld_GetCurrentSessionReply_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_GetCurrentSessionReply_descriptor,
+        new java.lang.String[] { "Session", });
+    internal_static_helloworld_Session_descriptor =
+      getDescriptor().getMessageTypes().get(2);
     internal_static_helloworld_Session_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_helloworld_Session_descriptor,

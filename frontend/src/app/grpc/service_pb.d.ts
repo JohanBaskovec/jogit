@@ -4,6 +4,9 @@ export class HelloRequest extends jspb.Message {
   getName(): string;
   setName(value: string): void;
 
+  getSessiontoken(): string;
+  setSessiontoken(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): HelloRequest.AsObject;
   static toObject(includeInstance: boolean, msg: HelloRequest): HelloRequest.AsObject;
@@ -15,6 +18,7 @@ export class HelloRequest extends jspb.Message {
 export namespace HelloRequest {
   export type AsObject = {
     name: string,
+    sessiontoken: string,
   }
 }
 

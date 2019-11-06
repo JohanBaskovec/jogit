@@ -33,17 +33,19 @@ public final class LoginProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013login.proto\022\nhelloworld\"H\n\014LoginReques" +
-      "t\022\020\n\010username\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\022\024\n" +
-      "\014sessionToken\030\003 \001(\t\"\"\n\nLoginReply\022\024\n\014ses" +
-      "sionToken\030\001 \001(\t2D\n\005Login\022;\n\005Login\022\030.hell" +
-      "oworld.LoginRequest\032\026.helloworld.LoginRe" +
-      "ply\"\000B(\n\030com.example.starter.gprcB\nLogin" +
-      "ProtoP\001b\006proto3"
+      "\n\013login.proto\022\nhelloworld\032\rsession.proto" +
+      "\"H\n\014LoginRequest\022\020\n\010username\030\001 \001(\t\022\020\n\010pa" +
+      "ssword\030\002 \001(\t\022\024\n\014sessionToken\030\003 \001(\t\"2\n\nLo" +
+      "ginReply\022$\n\007session\030\001 \001(\0132\023.helloworld.S" +
+      "ession2D\n\005Login\022;\n\005Login\022\030.helloworld.Lo" +
+      "ginRequest\032\026.helloworld.LoginReply\"\000B(\n\030" +
+      "com.example.starter.gprcB\nLoginProtoP\001b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.example.starter.gprc.SessionProto.getDescriptor(),
         });
     internal_static_helloworld_LoginRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -56,7 +58,8 @@ public final class LoginProto {
     internal_static_helloworld_LoginReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_helloworld_LoginReply_descriptor,
-        new java.lang.String[] { "SessionToken", });
+        new java.lang.String[] { "Session", });
+    com.example.starter.gprc.SessionProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

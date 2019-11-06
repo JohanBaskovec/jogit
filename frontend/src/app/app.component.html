@@ -1,3 +1,6 @@
-<span *ngIf="serverResponse">Server responded "{{serverResponse}}"</span>
-<span *ngIf="serverError">Error during request. Code {{serverError.code}}, message: {{serverError.message}}</span>
+<ul>
+  <li><a routerLink="/register">Register</a></li>
+  <li><a routerLink="/login">Login</a></li>
+  <li><a *ngIf="sessionService.getSession() != null" routerLink="/my-account">My account</a></li>
+</ul>
 <router-outlet></router-outlet>

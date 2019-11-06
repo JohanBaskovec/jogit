@@ -94,7 +94,8 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
     public void handleSuccess(Void result) {
       transaction.commit();
       // TODO: find a way to put the session token in a httponly cookie
-      future.complete(LoginReply.newBuilder().setSessionToken(session.getId()).build());
+      // TODO: do not return user's password and salt!
+      future.complete(LoginReply.newBuilder().setSession(session).build());
     }
   }
 }
