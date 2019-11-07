@@ -27,7 +27,7 @@ class SessionEndpoint extends SessionServiceGrpc.SessionServiceVertxImplBase {
         SessionRepository sessionRepository = sessionRepositoryFactory.get(transaction);
         sessionRepository.getSessionById(
           request.getSessionToken(),
-          new WithRequestContextHandler<GetCurrentSessionRequest, GetCurrentSessionReply, Session>(requestContext) {
+          new ErrorHandler<Session, GetCurrentSessionReply>(requestContext) {
             @Override
             public void handleSuccess(Session session) {
               GetCurrentSessionReply.Builder builder = GetCurrentSessionReply.newBuilder();

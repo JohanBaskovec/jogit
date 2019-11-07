@@ -42,11 +42,10 @@ class RegisterEndpoint extends RegisterGrpc.RegisterVertxImplBase {
           .setPasswordSalt(salt)
           .build();
         UserRepository userRepository = userRepositoryFactory.get(transaction);
-        userRepository.insert(user, new WithRequestContextHandler<RegisterRequest, RegisterReply, Void>(requestContext) {
+        userRepository.insert(user, new ErrorHandler<Void, RegisterReply>(requestContext) {
           @Override
           public void handleSuccess(Void result) {
             requestContext.handle(Future.succeededFuture(RegisterReply.newBuilder().build()));
-            transaction.commit();
           }
         });
       });

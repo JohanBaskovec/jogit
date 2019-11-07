@@ -6,7 +6,9 @@ import com.example.starter.gprc.LoginRequest;
 import com.example.starter.gprc.Session;
 import com.example.starter.gprc.User;
 import io.grpc.Status;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Transaction;
 
@@ -50,7 +52,7 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
     });
   }
 
-  private static class AuthenticationHandler extends WithRequestContextHandler<LoginRequest, LoginReply, User> {
+  private static class AuthenticationHandler extends ErrorHandler<User, LoginReply> {
     private final Transaction transaction;
     private final SessionRepositoryFactory sessionRepositoryFactory;
     private final SessionService sessionService;
@@ -70,7 +72,7 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
     @Override
     public void handleSuccess(User user) {
       if (user == null) {
-        requestContext.handle(Future.failedFuture(Status.UNAUTHENTICATED.withDescription("Invalid username or password").asRuntimeException()));
+        handler.handle(Future.failedFuture(Status.UNAUTHENTICATED.withDescription("Invalid username or password").asRuntimeException()));
         return;
       }
 
@@ -81,26 +83,23 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
         .setUserUsername(user.getUsername())
         .build();
       // TODO: do not insert session with same user
-      sessionRepository.insert(session, new InsertSessionHandler(requestContext, transaction, session));
+      sessionRepository.insert(session, new InsertSessionHandler(handler, session));
     }
   }
 
-  private static class InsertSessionHandler extends WithRequestContextHandler<LoginRequest, LoginReply, Void> {
-    private final Transaction transaction;
+  private static class InsertSessionHandler extends ErrorHandler<Void, LoginReply> {
     private final Session session;
 
-    InsertSessionHandler(RequestContext<LoginRequest, LoginReply> handler, Transaction transaction, Session session) {
+    InsertSessionHandler(Handler<AsyncResult<LoginReply>> handler, Session session) {
       super(handler);
-      this.transaction = transaction;
       this.session = session;
     }
 
     @Override
     public void handleSuccess(Void result) {
-      transaction.commit();
       // TODO: find a way to put the session token in a httponly cookie
       // TODO: do not return user's password and salt!
-      requestContext.handle(Future.succeededFuture(LoginReply.newBuilder().setSession(session).build()));
+      handler.handle(Future.succeededFuture(LoginReply.newBuilder().setSession(session).build()));
     }
   }
 }

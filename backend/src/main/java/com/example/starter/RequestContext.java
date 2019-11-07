@@ -72,7 +72,17 @@ public class RequestContext<RequestType, ResponseType> implements Handler<AsyncR
   }
 
   private void complete(ResponseType response) {
-    future.handle(Future.succeededFuture(response));
+    if (this.transaction != null) {
+      this.transaction.commit((AsyncResult<Void> commitResult) -> {
+        if (commitResult.failed()) {
+          System.out.println("Error during commit!");
+          commitResult.cause().printStackTrace();
+          future.handle(Future.failedFuture(Status.INTERNAL.withDescription("Internal error.").asRuntimeException()));
+        } else {
+          future.handle(Future.succeededFuture(response));
+        }
+      });
+    }
   }
 
   /**
