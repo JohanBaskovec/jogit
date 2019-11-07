@@ -3,11 +3,11 @@ package com.example.starter;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 
-public abstract class TryHandler<ResultType, HandlerResultType> implements Handler<AsyncResult<ResultType>> {
-  protected final Handler<AsyncResult<HandlerResultType>> handler;
+public abstract class WithRequestContextTryHandler<RequestType, ResponseType, ResultType> implements Handler<AsyncResult<ResultType>> {
+  protected final RequestContext<RequestType, ResponseType> requestContext;
 
-  TryHandler(Handler<AsyncResult<HandlerResultType>> handler) {
-    this.handler = handler;
+  WithRequestContextTryHandler(RequestContext<RequestType, ResponseType> requestContext) {
+    this.requestContext = requestContext;
   }
 
   @Override

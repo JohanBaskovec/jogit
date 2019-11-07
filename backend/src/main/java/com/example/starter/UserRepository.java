@@ -42,7 +42,7 @@ public class UserRepository {
     transaction.preparedQuery(
       selectByUsernameQuery,
       Tuple.of(username),
-      new ErrorHandlerWithTransaction<RowSet<Row>, User>(handler, transaction) {
+      new ErrorHandler<RowSet<Row>, User>(handler) {
         @Override
         public void handleSuccess(RowSet<Row> rows) {
           if (rows.size() == 0) {
@@ -62,16 +62,12 @@ public class UserRepository {
     transaction.preparedQuery(
       insertQuery,
       Tuple.of(user.getUsername(), user.getPassword(), user.getPasswordSalt()),
-      new ErrorHandlerWithTransaction<RowSet<Row>, Void>(handler, transaction) {
+      new ErrorHandler<RowSet<Row>, Void>(handler) {
         @Override
         public void handleSuccess(RowSet<Row> result) {
-          createLinuxAccount(user, handler);
+          linuxService.createUserAccount(user);
+          handler.handle(Future.succeededFuture());
         }
       });
-  }
-
-  private void createLinuxAccount(User user, Handler<AsyncResult<Void>> handler) {
-    linuxService.createUserAccount(user);
-    handler.handle(Future.succeededFuture());
   }
 }

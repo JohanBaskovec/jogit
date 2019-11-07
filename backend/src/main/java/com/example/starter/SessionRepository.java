@@ -67,15 +67,11 @@ public class SessionRepository {
     transaction.preparedQuery(
       insertQuery,
       Tuple.of(session.getUserUsername(), session.getId()),
-      (AsyncResult<RowSet<Row>> maybeResult) -> {
-        if (maybeResult.failed()) {
-          System.out.println(insertQuery + " failed.");
-          maybeResult.cause().printStackTrace();
-          handler.handle(Future.failedFuture(maybeResult.cause()));
-          return;
+      new ErrorHandler<RowSet<Row>, Void>(handler) {
+        @Override
+        public void handleSuccess(RowSet<Row> result) {
+          handler.handle(Future.succeededFuture(null));
         }
-        handler.handle(Future.succeededFuture(null));
       });
-
   }
 }

@@ -21,21 +21,23 @@ class SessionEndpoint extends SessionServiceGrpc.SessionServiceVertxImplBase {
 
   @Override
   public void getCurrentSession(GetCurrentSessionRequest request, Future<GetCurrentSessionReply> response) {
-    pgClient.begin(new ErrorHandler<Transaction, GetCurrentSessionReply>(response) {
-      @Override
-      public void handleSuccess(Transaction transaction) {
+    RequestContext<GetCurrentSessionRequest, GetCurrentSessionReply> requestContext = new RequestContext<>(pgClient, request, response);
+    requestContext.run(() -> {
+      requestContext.begin((Transaction transaction) -> {
         SessionRepository sessionRepository = sessionRepositoryFactory.get(transaction);
-        sessionRepository.getSessionById(request.getSessionToken(), new ErrorHandlerWithTransaction<Session, GetCurrentSessionReply>(response, transaction) {
-          @Override
-          public void handleSuccess(Session session) {
-            GetCurrentSessionReply.Builder builder = GetCurrentSessionReply.newBuilder();
-            if (session != null) {
-              builder.setSession(session);
+        sessionRepository.getSessionById(
+          request.getSessionToken(),
+          new WithRequestContextHandler<GetCurrentSessionRequest, GetCurrentSessionReply, Session>(requestContext) {
+            @Override
+            public void handleSuccess(Session session) {
+              GetCurrentSessionReply.Builder builder = GetCurrentSessionReply.newBuilder();
+              if (session != null) {
+                builder.setSession(session);
+              }
+              response.complete(builder.buildPartial());
             }
-            response.complete(builder.buildPartial());
-          }
-        });
-      }
+          });
+      });
     });
   }
 }

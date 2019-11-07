@@ -1,29 +1,23 @@
 package com.example.starter;
 
-import io.grpc.Status;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 
-public abstract class ErrorHandler<T, U> extends TryHandler<T, U> {
-  ErrorHandler(Handler<AsyncResult<U>> handler) {
+public abstract class ErrorHandler<ResultType, HandlerResultType> extends TryHandler<ResultType, HandlerResultType> {
+  ErrorHandler(Handler<AsyncResult<HandlerResultType>> handler) {
     super(handler);
   }
 
   @Override
   public void onFailure(Throwable e) {
-    e.printStackTrace();
-    handler.handle(Future.failedFuture(Status.INTERNAL.withDescription("Internal error.").asRuntimeException()));
+    handler.handle(Future.failedFuture(e));
   }
 
   @Override
-  public void onSuccess(T result) {
-    try {
-      handleSuccess(result);
-    } catch (Throwable t) {
-      onFailure(t);
-    }
+  public void onSuccess(ResultType result) {
+    handleSuccess(result);
   }
 
-  public abstract void handleSuccess(T result);
+  public abstract void handleSuccess(ResultType result);
 }

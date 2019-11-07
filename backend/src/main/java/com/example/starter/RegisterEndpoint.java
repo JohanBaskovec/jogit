@@ -26,14 +26,14 @@ class RegisterEndpoint extends RegisterGrpc.RegisterVertxImplBase {
 
   @Override
   public void register(RegisterRequest request, Future<RegisterReply> future) {
-    int userNameUtf8Length = Utf8.encodedLength(request.getUsername());
-    if (userNameUtf8Length > 32) {
-      future.fail(Status.INVALID_ARGUMENT.asRuntimeException());
-      return;
-    }
-    pgClient.begin(new ErrorHandler<Transaction, RegisterReply>(future) {
-      @Override
-      public void handleSuccess(Transaction transaction) {
+    RequestContext<RegisterRequest, RegisterReply> requestContext = new RequestContext<>(pgClient, request, future);
+    requestContext.run(() -> {
+      int userNameUtf8Length = Utf8.encodedLength(request.getUsername());
+      if (userNameUtf8Length > 32) {
+        future.fail(Status.INVALID_ARGUMENT.asRuntimeException());
+        return;
+      }
+      requestContext.begin((Transaction transaction) -> {
         String salt = authService.generateSalt();
         String passwordHash = authService.computeHash(request.getPassword(), salt);
         User user = User.newBuilder()
@@ -42,14 +42,14 @@ class RegisterEndpoint extends RegisterGrpc.RegisterVertxImplBase {
           .setPasswordSalt(salt)
           .build();
         UserRepository userRepository = userRepositoryFactory.get(transaction);
-        userRepository.insert(user, new ErrorHandlerWithTransaction<Void, RegisterReply>(handler, transaction) {
+        userRepository.insert(user, new WithRequestContextHandler<RegisterRequest, RegisterReply, Void>(requestContext) {
           @Override
           public void handleSuccess(Void result) {
-            handler.handle(Future.succeededFuture(RegisterReply.newBuilder().build()));
+            requestContext.handle(Future.succeededFuture(RegisterReply.newBuilder().build()));
             transaction.commit();
           }
         });
-      }
+      });
     });
   }
 }

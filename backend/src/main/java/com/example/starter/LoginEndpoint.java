@@ -6,9 +6,7 @@ import com.example.starter.gprc.LoginRequest;
 import com.example.starter.gprc.Session;
 import com.example.starter.gprc.User;
 import io.grpc.Status;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Transaction;
 
@@ -35,34 +33,36 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
 
   @Override
   public void login(LoginRequest request, Future<LoginReply> future) {
-    pgClient.begin(new ErrorHandler<Transaction, LoginReply>(future) {
-      @Override
-      public void handleSuccess(Transaction transaction) {
+    RequestContext<LoginRequest, LoginReply> requestContext = new RequestContext<>(pgClient, request, future);
+    requestContext.run(() -> {
+      requestContext.begin((Transaction transaction) -> {
         authService.authenticate(
           userRepositoryFactory.get(transaction),
           request,
           new AuthenticationHandler(
-            handler,
+            requestContext,
             transaction,
             sessionRepositoryFactory,
             sessionService
           )
         );
-      }
+      });
     });
   }
 
-  private static class AuthenticationHandler extends ErrorHandlerWithTransaction<User, LoginReply> {
+  private static class AuthenticationHandler extends WithRequestContextHandler<LoginRequest, LoginReply, User> {
+    private final Transaction transaction;
     private final SessionRepositoryFactory sessionRepositoryFactory;
     private final SessionService sessionService;
 
     AuthenticationHandler(
-      Handler<AsyncResult<LoginReply>> handler,
+      RequestContext<LoginRequest, LoginReply> requestContext,
       Transaction transaction,
       SessionRepositoryFactory sessionRepositoryFactory,
       SessionService sessionService
     ) {
-      super(handler, transaction);
+      super(requestContext);
+      this.transaction = transaction;
       this.sessionRepositoryFactory = sessionRepositoryFactory;
       this.sessionService = sessionService;
     }
@@ -70,7 +70,7 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
     @Override
     public void handleSuccess(User user) {
       if (user == null) {
-        handler.handle(Future.failedFuture(Status.UNAUTHENTICATED.withDescription("Invalid username or password").asRuntimeException()));
+        requestContext.handle(Future.failedFuture(Status.UNAUTHENTICATED.withDescription("Invalid username or password").asRuntimeException()));
         return;
       }
 
@@ -80,15 +80,18 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
         .setUser(user)
         .setUserUsername(user.getUsername())
         .build();
-      sessionRepository.insert(session, new InsertSessionHandler(handler, transaction, session));
+      // TODO: do not insert session with same user
+      sessionRepository.insert(session, new InsertSessionHandler(requestContext, transaction, session));
     }
   }
 
-  private static class InsertSessionHandler extends ErrorHandlerWithTransaction<Void, LoginReply> {
+  private static class InsertSessionHandler extends WithRequestContextHandler<LoginRequest, LoginReply, Void> {
+    private final Transaction transaction;
     private final Session session;
 
-    InsertSessionHandler(Handler<AsyncResult<LoginReply>> future, Transaction transaction, Session session) {
-      super(future, transaction);
+    InsertSessionHandler(RequestContext<LoginRequest, LoginReply> handler, Transaction transaction, Session session) {
+      super(handler);
+      this.transaction = transaction;
       this.session = session;
     }
 
@@ -97,7 +100,7 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
       transaction.commit();
       // TODO: find a way to put the session token in a httponly cookie
       // TODO: do not return user's password and salt!
-      handler.handle(Future.succeededFuture(LoginReply.newBuilder().setSession(session).build()));
+      requestContext.handle(Future.succeededFuture(LoginReply.newBuilder().setSession(session).build()));
     }
   }
 }
