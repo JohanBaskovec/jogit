@@ -1,9 +1,12 @@
 package com.example.starter;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class ProcessExecutorAsRootImpl implements ProcessExecutorAsRoot {
   private final String rootPassword;
@@ -34,7 +37,8 @@ public class ProcessExecutorAsRootImpl implements ProcessExecutorAsRoot {
 
       processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT)
         .redirectError(ProcessBuilder.Redirect.INHERIT);
-      Process process = processBuilder.start();
+      Process process = processBuilder.redirectErrorStream(true).start();
+
       OutputStream os = process.getOutputStream();
       os.write(rootPassword.getBytes());
       os.write("\n".getBytes());
@@ -46,6 +50,7 @@ public class ProcessExecutorAsRootImpl implements ProcessExecutorAsRoot {
       }
       os.flush();
       process.waitFor();
+      process.destroy();
       if (process.exitValue() != 0) {
         throw new RuntimeException("Exception while executing process.");
       }

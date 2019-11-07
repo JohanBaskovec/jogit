@@ -39,13 +39,16 @@ public class IntegrationTest {
         testContext.failNow(new RuntimeException("port must not be null."));
         return;
       }
+      ProcessExecutorAsRoot processExecutorAsRoot = new ProcessExecutorAsRootImpl(config.getString("rootPassword"));
       DatabaseService databaseService = new DatabaseService();
       pgClient = databaseService.newPgPool(vertx, config.getJsonObject("database"));
       VertxTestContext finalTestContext = testContext;
       pgClient.begin(testContext.succeeding((Transaction transaction) -> {
         System.out.println("initTestContext: begin transaction");
         transaction.query("delete from session; delete from appuser;", finalTestContext.succeeding(event -> {
-          System.out.println("deleted everything.");
+          System.out.println("cleared database.");
+          LinuxService linuxService = new LinuxService(processExecutorAsRoot);
+          linuxService.deleteUserAccount("username");
           transaction.commit(finalTestContext.succeeding(transactionCommit -> {
             System.out.println("transaction commited.");
             DeploymentOptions deploymentOptions = new DeploymentOptions();

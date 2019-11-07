@@ -25,4 +25,10 @@ public class LinuxService {
     passwords.add(user.getPassword());
     this.processExecutorAsRoot.execute(passwordChangeProcess, passwords);
   }
+
+  void deleteUserAccount(String username) {
+    ProcessBuilder accountDeletionProcess = new ProcessBuilder()
+      .command("userdel", "-r", username);
+    this.processExecutorAsRoot.execute(accountDeletionProcess);
+  }
 }
