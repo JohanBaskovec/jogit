@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NgForm} from "@angular/forms";
+import {AbstractControl, NgForm} from "@angular/forms";
 import {PropertyConstraints} from "../form-validation/property-constraints";
 
 @Component({
@@ -8,6 +8,8 @@ import {PropertyConstraints} from "../form-validation/property-constraints";
   styleUrls: ['./input-like.component.sass']
 })
 export class InputLikeComponent implements OnInit {
+  private _control: AbstractControl;
+
   @Input()
   constraints: PropertyConstraints;
   @Input()

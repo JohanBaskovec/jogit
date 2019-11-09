@@ -14,7 +14,7 @@ export class RegisterComponent {
   serverError: grpcWeb.Error = null;
   formRequest: RegisterRequest = new RegisterRequest();
   submitting: boolean;
-  formSubmittedWithoutError: boolean = true;
+  formSubmittedWithoutError: boolean = false;
 
   constructor(
     private registerClient: RegisterClient,

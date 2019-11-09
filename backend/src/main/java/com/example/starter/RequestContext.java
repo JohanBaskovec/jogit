@@ -1,6 +1,8 @@
 package com.example.starter;
 
 import io.grpc.Status;
+import io.grpc.StatusException;
+import io.grpc.StatusRuntimeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -23,7 +25,7 @@ public class RequestContext<RequestType, ResponseType> implements Handler<AsyncR
     try {
       runnable.run();
     } catch (Throwable t) {
-      this.fail(t);
+      failWithNonGrpcError(t);
     }
   }
 
@@ -41,33 +43,38 @@ public class RequestContext<RequestType, ResponseType> implements Handler<AsyncR
       public void handle(AsyncResult<Transaction> event) {
         try {
           if (event.failed()) {
-            fail(event.cause());
+            failWithNonGrpcError(event.cause());
           } else {
             transaction = event.result();
             handler.handle(event.result());
           }
         } catch (Throwable t) {
-          fail(t);
+          failWithNonGrpcError(t);
         }
       }
     });
   }
 
-  private void fail(Throwable t) {
+  private void failWithNonGrpcError(Throwable t) {
     t.printStackTrace();
+    fail(Status.INTERNAL.withDescription("Internal error.").asRuntimeException());
+  }
+
+  private void fail(Throwable t) {
     if (transaction != null) {
       transaction.rollback(new Handler<AsyncResult<Void>>() {
         @Override
         public void handle(AsyncResult<Void> event) {
           if (event.failed()) {
             System.out.println("Error during rollback!");
-            event.cause().printStackTrace();
+            failWithNonGrpcError(event.cause());
+          } else {
+            future.handle(Future.failedFuture(t));
           }
-          future.handle(Future.failedFuture(Status.INTERNAL.withDescription("Internal error.").asRuntimeException()));
         }
       });
     } else {
-      future.handle(Future.failedFuture(Status.INTERNAL.withDescription("Internal error.").asRuntimeException()));
+      future.handle(Future.failedFuture(t));
     }
   }
 
@@ -76,8 +83,7 @@ public class RequestContext<RequestType, ResponseType> implements Handler<AsyncR
       this.transaction.commit((AsyncResult<Void> commitResult) -> {
         if (commitResult.failed()) {
           System.out.println("Error during commit!");
-          commitResult.cause().printStackTrace();
-          future.handle(Future.failedFuture(Status.INTERNAL.withDescription("Internal error.").asRuntimeException()));
+          failWithNonGrpcError(commitResult.cause());
         } else {
           future.handle(Future.succeededFuture(response));
         }
@@ -93,7 +99,15 @@ public class RequestContext<RequestType, ResponseType> implements Handler<AsyncR
   @Override
   public void handle(AsyncResult<ResponseType> event) {
     if (event.failed()) {
-      fail(event.cause());
+      // if this is a gRPC error, then we can submit the Exception as-is,
+      // (this is an "expected" Exception, such as invalid request parameters,
+      // or unauthenticated user), otherwise we send a gRPC Status.INTERNAL Exception.
+      if (event.cause() instanceof StatusException
+        || event.cause() instanceof StatusRuntimeException) {
+        fail(event.cause());
+      } else {
+        failWithNonGrpcError(event.cause());
+      }
     } else {
       complete(event.result());
     }

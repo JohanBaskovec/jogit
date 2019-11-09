@@ -34,7 +34,7 @@ class SessionEndpoint extends SessionServiceGrpc.SessionServiceVertxImplBase {
               if (session != null) {
                 builder.setSession(session);
               }
-              response.complete(builder.buildPartial());
+              handler.handle(Future.succeededFuture(builder.buildPartial()));
             }
           });
       });

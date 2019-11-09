@@ -1,5 +1,5 @@
 {
-  "__comment": "If modifying this file, don't forget to update login.json!!!",
+  "__comment": "If modifying this file, don't forget to update registration.json!!!",
   "propertyConstraints": [
     {
       "name": "username",

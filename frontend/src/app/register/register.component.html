@@ -1,22 +1,22 @@
-<ng-container *ngIf="formSubmittedWithoutError; else formSubmitted">
-<form (ngSubmit)="submit()" #form="ngForm">
-  <app-form-group [label]="'Username'"
-                  [value]="formRequest.getUsername()"
-                  (valueChange)="formRequest.setUsername($event)"
-                  [constraints]="formValidationService.registration.constraints.username"
-                  [form]="form">
-  </app-form-group>
-  <app-form-group [label]="'Password'"
-                  [value]="formRequest.getPassword()"
-                  (valueChange)="formRequest.setPassword($event)"
-                  [constraints]="formValidationService.registration.constraints.password"
-                  [form]="form">
-  </app-form-group>
-  <app-button [disabled]="form.pristine || form.invalid || submitting"
-              [label]="'Submit'"
-              [type]="'submit'"
-  ></app-button>
-</form>
+<ng-container *ngIf="!formSubmittedWithoutError; else formSubmitted">
+  <form (ngSubmit)="submit()" #form="ngForm">
+    <app-form-group [label]="'Username'"
+                    [value]="formRequest.getUsername()"
+                    (valueChange)="formRequest.setUsername($event)"
+                    [constraints]="formValidationService.registration.constraints.username"
+                    [form]="form">
+    </app-form-group>
+    <app-form-group [label]="'Password'"
+                    [value]="formRequest.getPassword()"
+                    (valueChange)="formRequest.setPassword($event)"
+                    [constraints]="formValidationService.registration.constraints.password"
+                    [form]="form">
+    </app-form-group>
+    <app-button [disabled]="form.pristine || form.invalid || submitting"
+                [label]="'Register'"
+                [type]="'submit'"
+    ></app-button>
+  </form>
 </ng-container>
 <ng-template #formSubmitted>
   Registered!

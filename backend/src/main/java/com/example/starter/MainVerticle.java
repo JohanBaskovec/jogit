@@ -44,13 +44,6 @@ public class MainVerticle extends AbstractVerticle {
     LinuxService linuxService = new LinuxService(processExecutorAsRoot);
     UserRepositoryFactory userRepositoryFactory = new UserRepositoryFactory(userService, linuxService);
 
-    LoginEndpoint loginEndpoint = new LoginEndpoint(
-      pgClient,
-      userRepositoryFactory,
-      sessionRepositoryFactory,
-      authService,
-      sessionService
-    );
     SessionEndpoint sessionEndpoint = new SessionEndpoint(pgClient, sessionRepositoryFactory);
 
     Integer port = config.getJsonObject("server").getInteger("port");
@@ -61,7 +54,7 @@ public class MainVerticle extends AbstractVerticle {
     VertxServer rpcServer = VertxServerBuilder
       .forAddress(vertx, "localhost", port)
       .addService(newRegisterEndpoint(pgClient, authService, userRepositoryFactory))
-      .addService(loginEndpoint)
+      .addService(newLoginEndpoint(pgClient, sessionService, sessionRepositoryFactory, authService, userRepositoryFactory))
       .addService(sessionEndpoint)
       .build();
 
@@ -76,18 +69,32 @@ public class MainVerticle extends AbstractVerticle {
       });
   }
 
+  private LoginEndpoint newLoginEndpoint(PgPool pgClient, SessionService sessionService, SessionRepositoryFactory sessionRepositoryFactory, AuthenticationService authService, UserRepositoryFactory userRepositoryFactory) throws IOException {
+    String requestConstraints = StaticFileSystemService.readResourceToString("validation/login.json");
+    ObjectValidator requestValidator = new ObjectValidator(new JsonObject(requestConstraints));
+    return new LoginEndpoint(
+      pgClient,
+      userRepositoryFactory,
+      sessionRepositoryFactory,
+      authService,
+      sessionService,
+      requestValidator
+    );
+  }
+
   private RegisterEndpoint newRegisterEndpoint(
     PgPool pgClient,
     AuthenticationService authService,
     UserRepositoryFactory userRepositoryFactory
   ) throws IOException {
-    String registrationRequestValidationConstraints = StaticFileSystemService.readResourceToString("validation/registration.json");
-    ObjectValidator registerRequestValidator = new ObjectValidator(new JsonObject(registrationRequestValidationConstraints));
+    String requestConstraints = StaticFileSystemService.readResourceToString("validation/registration.json");
+    ObjectValidator requestValidator = new ObjectValidator(new JsonObject(requestConstraints));
     return new RegisterEndpoint(
       pgClient,
       userRepositoryFactory,
       authService,
-      registerRequestValidator
+      requestValidator
     );
   }
+
 }

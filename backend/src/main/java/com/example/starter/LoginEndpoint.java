@@ -5,6 +5,8 @@ import com.example.starter.gprc.LoginReply;
 import com.example.starter.gprc.LoginRequest;
 import com.example.starter.gprc.Session;
 import com.example.starter.gprc.User;
+import com.example.starter.validation.ObjectValidationResult;
+import com.example.starter.validation.ObjectValidator;
 import io.grpc.Status;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -18,25 +20,33 @@ class LoginEndpoint extends LoginGrpc.LoginVertxImplBase {
   private final SessionRepositoryFactory sessionRepositoryFactory;
   private final AuthenticationService authService;
   private final SessionService sessionService;
+  private final ObjectValidator requestValidator;
 
   LoginEndpoint(
     PgPool pgClient,
     UserRepositoryFactory userRepositoryFactory,
     SessionRepositoryFactory sessionRepositoryFactory,
     AuthenticationService authService,
-    SessionService sessionService
+    SessionService sessionService,
+    ObjectValidator requestValidator
   ) {
     this.pgClient = pgClient;
     this.userRepositoryFactory = userRepositoryFactory;
     this.sessionRepositoryFactory = sessionRepositoryFactory;
     this.authService = authService;
     this.sessionService = sessionService;
+    this.requestValidator = requestValidator;
   }
 
   @Override
   public void login(LoginRequest request, Future<LoginReply> future) {
     RequestContext<LoginRequest, LoginReply> requestContext = new RequestContext<>(pgClient, request, future);
     requestContext.run(() -> {
+      ObjectValidationResult objectValidationResult = requestValidator.validate(request);
+      if (objectValidationResult.isInvalid()) {
+        future.fail(Status.INVALID_ARGUMENT.asRuntimeException());
+        return;
+      }
       requestContext.begin((Transaction transaction) -> {
         authService.authenticate(
           userRepositoryFactory.get(transaction),

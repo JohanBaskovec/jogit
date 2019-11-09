@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {NgModel} from "@angular/forms";
+import {AbstractControl, NgModel} from "@angular/forms";
 import {InputLikeComponent} from "../input-like/input-like.component";
 
 @Component({
@@ -18,5 +18,9 @@ export class InputComponent extends InputLikeComponent implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
     this.form.addControl(this.input);
+  }
+
+  get control(): AbstractControl {
+    return this.input.control;
   }
 }

@@ -1,13 +1,27 @@
-<form (ngSubmit)="submit()" #form="ngForm">
-  <input [ngModel]="formRequest.getUsername()"
-         (ngModelChange)="formRequest.setUsername($event)"
-         name="username"
-         id="username"
-  >
-  <input [ngModel]="formRequest.getPassword()"
-         (ngModelChange)="formRequest.setPassword($event)"
-         name="password"
-         id="password"
-  >
-  <button type="submit">Submit</button>
-</form>
+<ng-container *ngIf="!formSubmittedWithoutError; else formSubmitted">
+  <form (ngSubmit)="submit()" #form="ngForm">
+    <app-form-group [label]="'Username'"
+                    [value]="formRequest.getUsername()"
+                    (valueChange)="onUsernameChange($event)"
+                    [constraints]="formValidationService.login.constraints.username"
+                    [form]="form"
+                    #username
+    >
+    </app-form-group>
+    <app-form-group [label]="'Password'"
+                    [value]="formRequest.getPassword()"
+                    (valueChange)="onPasswordChange($event)"
+                    [constraints]="formValidationService.login.constraints.password"
+                    [form]="form"
+                    #password
+    >
+    </app-form-group>
+    <app-button [disabled]="form.pristine || form.invalid || submitting"
+                [label]="'Log in'"
+                [type]="'submit'"
+    ></app-button>
+  </form>
+</ng-container>
+<ng-template #formSubmitted>
+  Logged in!
+</ng-template>

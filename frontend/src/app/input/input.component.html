@@ -8,6 +8,7 @@
        [id]="name"
        [name]="name"
        [maxlength]="'' + maxLength"
+       [minlength]="'' + minLength"
        [pattern]="pattern"
        #input="ngModel">
 <div *ngIf="input.invalid && (input.dirty || input.touched)"
@@ -25,6 +26,11 @@
   <div *ngIf="input.errors.pattern">
     <!-- TODO: display custom error messages -->
     {{label}} must match pattern {{pattern}}.
+  </div>
+  <div *ngIf="input.errors.other">
+    <ng-container *ngFor="let error of input.errors.other">
+      {{error}}
+    </ng-container>
   </div>
 
 </div>
