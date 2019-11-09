@@ -1,0 +1,23 @@
+<input [ngModel]="value"
+       (ngModelChange)="onChange($event)"
+       [required]="required"
+       class="form-control"
+       [class.form-control-error]="input.invalid && (input.dirty || input.touched)"
+       [class.form-control-valid]="input.valid"
+       [class.form-control-neutral]="input.pristine"
+       [id]="name"
+       [name]="name"
+       [minlength]="'' + minLength"
+       [maxlength]="'' + maxLength"
+       #input="ngModel">
+<div *ngIf="input.invalid && (input.dirty || input.touched)"
+     class="form-control-errors-container error">
+
+  <div *ngIf="input.errors.required">
+    {{label}} required.
+  </div>
+  <div *ngIf="input.errors.minlength">
+    {{label}} must be at least {{minLength}} characters long.
+  </div>
+
+</div>

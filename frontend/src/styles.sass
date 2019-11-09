@@ -5,3 +5,35 @@
 @import "scss/bootstrap/reboot"
 @import "scss/bootstrap/grid"
 
+.form-control
+  width: 100%
+  border: 1px solid $black
+  padding: .375rem .75rem;
+  &:focus
+    outline: 0
+
+.form-group
+  margin-bottom: 1rem
+
+.form-control-error
+  border: 1px solid $red
+
+.form-control-valid
+  border: 1px solid $green
+
+.form-control:focus
+  outline: 0
+  box-shadow: 0 0 5px 1px $gray-200
+
+.form-control-error:focus
+  box-shadow: 0 0 5px 1px $red
+
+.form-control-valid:focus
+  outline: 0
+  box-shadow: 0 0 5px 1px $green
+
+.error
+  color: $red
+
+.form-control-errors-container
+  margin-top: 0.7rem

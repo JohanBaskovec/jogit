@@ -1,0 +1,12 @@
+<div class="form-group">
+  <label [for]="name">{{label}}</label>
+  <app-input [value]="value"
+             (valueChange)="onChange($event)"
+             [name]="name"
+             [form]="form"
+             [required]="required"
+             [minLength]="minLength"
+             [maxLength]="maxLength"
+             [label]="label"
+  ></app-input>
+</div>

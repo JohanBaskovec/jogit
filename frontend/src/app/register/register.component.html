@@ -1,19 +1,20 @@
-<div class="row">
-  <div class="col-md-6">
-    <form (ngSubmit)="submit()" #form="ngForm">
-      <input [ngModel]="formRequest.getUsername()"
-             (ngModelChange)="formRequest.setUsername($event)"
-             name="username"
-             id="username"
-      > <input [ngModel]="formRequest.getPassword()"
-               (ngModelChange)="formRequest.setPassword($event)"
-               name="password"
-               id="password"
-    >
-      <button type="submit">Submit</button>
-    </form>
-  </div>
-  <div class="col-md-6">
-    <kbd>test</kbd>
-  </div>
-</div>
+<form (ngSubmit)="submit()" #form="ngForm">
+  <app-form-group [label]="'Username'"
+                  [value]="formRequest.getUsername()"
+                  (valueChange)="formRequest.setUsername($event)"
+                  [required]="true"
+                  [minLength]="1"
+                  [form]="form">
+  </app-form-group>
+  <app-form-group [label]="'Password'"
+                  [value]="formRequest.getPassword()"
+                  (valueChange)="formRequest.setPassword($event)"
+                  [required]="true"
+                  [minLength]="4"
+                  [form]="form">
+  </app-form-group>
+  <app-button [disabled]="form.pristine || form.invalid"
+              [label]="'Submit'"
+              [type]="'submit'"
+  ></app-button>
+</form>

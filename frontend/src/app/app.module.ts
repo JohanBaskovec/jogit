@@ -11,6 +11,10 @@ import {RegisterClient} from "./grpc/register_grpc_web_pb";
 import {LoginClient} from "./grpc/login_grpc_web_pb";
 import {ApplicationConfiguration} from "./ApplicationConfiguration";
 import {SessionServiceClient} from "./grpc/session_grpc_web_pb";
+import { InputComponent } from './input/input.component';
+import { FormGroupComponent } from './form-group/form-group.component';
+import { InputLikeComponent } from './input-like/input-like.component';
+import { ButtonComponent } from './button/button.component';
 
 const applicationConfiguration = new ApplicationConfiguration();
 
@@ -19,7 +23,11 @@ const applicationConfiguration = new ApplicationConfiguration();
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    AccountComponent
+    AccountComponent,
+    InputComponent,
+    FormGroupComponent,
+    InputLikeComponent,
+    ButtonComponent
   ],
   imports: [
     BrowserModule,
