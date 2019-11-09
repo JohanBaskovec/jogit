@@ -7,7 +7,6 @@
        [class.form-control-neutral]="input.pristine"
        [id]="name"
        [name]="name"
-       [minlength]="'' + minLength"
        [maxlength]="'' + maxLength"
        #input="ngModel">
 <div *ngIf="input.invalid && (input.dirty || input.touched)"

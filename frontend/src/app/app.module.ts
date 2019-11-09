@@ -15,8 +15,14 @@ import { InputComponent } from './input/input.component';
 import { FormGroupComponent } from './form-group/form-group.component';
 import { InputLikeComponent } from './input-like/input-like.component';
 import { ButtonComponent } from './button/button.component';
+import { ErrorpageComponent } from './errorpage/errorpage.component';
 
 const applicationConfiguration = new ApplicationConfiguration();
+
+// @ts-ignore
+import RegistrationValidation from '../../../backend/src/main/resources/validation/registration.json';
+import {FormValidationService} from "./form-validation/form-validation-service/form-validation.service";
+import {ObjectConstraints} from "./form-validation/object-contraints";
 
 @NgModule({
   declarations: [
@@ -27,7 +33,8 @@ const applicationConfiguration = new ApplicationConfiguration();
     InputComponent,
     FormGroupComponent,
     InputLikeComponent,
-    ButtonComponent
+    ButtonComponent,
+    ErrorpageComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +45,7 @@ const applicationConfiguration = new ApplicationConfiguration();
     {provide: RegisterClient, useValue: new RegisterClient(applicationConfiguration.getBackendUrl()) },
     {provide: LoginClient, useValue: new LoginClient(applicationConfiguration.getBackendUrl()) },
     {provide: SessionServiceClient, useValue: new SessionServiceClient(applicationConfiguration.getBackendUrl()) },
+    {provide: FormValidationService, useValue: new FormValidationService(new ObjectConstraints(RegistrationValidation)) },
 
   ],
   bootstrap: [AppComponent]

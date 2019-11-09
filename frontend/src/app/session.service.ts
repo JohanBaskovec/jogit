@@ -26,7 +26,6 @@ export class SessionService {
           //TODO: display error popup
           return;
         }
-        console.log(response);
         if (response.hasSession()) {
           this.session = response.getSession()
         } else {

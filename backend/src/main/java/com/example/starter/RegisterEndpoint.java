@@ -4,6 +4,9 @@ import com.example.starter.gprc.RegisterGrpc;
 import com.example.starter.gprc.RegisterReply;
 import com.example.starter.gprc.RegisterRequest;
 import com.example.starter.gprc.User;
+import com.example.starter.validation.ObjectValidationResult;
+import com.example.starter.validation.ObjectValidator;
+import com.example.starter.validation.PropertyValidationResult;
 import com.google.common.base.Utf8;
 import io.grpc.Status;
 import io.vertx.core.Future;
@@ -14,22 +17,25 @@ class RegisterEndpoint extends RegisterGrpc.RegisterVertxImplBase {
   private final PgPool pgClient;
   private final UserRepositoryFactory userRepositoryFactory;
   private final AuthenticationService authService;
+  private final ObjectValidator requestValidator;
 
   RegisterEndpoint(
     PgPool pgClient,
     UserRepositoryFactory userRepositoryFactory,
-    AuthenticationService authService) {
+    AuthenticationService authService,
+    ObjectValidator requestValidator) {
     this.pgClient = pgClient;
     this.userRepositoryFactory = userRepositoryFactory;
     this.authService = authService;
+    this.requestValidator = requestValidator;
   }
 
   @Override
   public void register(RegisterRequest request, Future<RegisterReply> future) {
     RequestContext<RegisterRequest, RegisterReply> requestContext = new RequestContext<>(pgClient, request, future);
     requestContext.run(() -> {
-      int userNameUtf8Length = Utf8.encodedLength(request.getUsername());
-      if (userNameUtf8Length > 32) {
+      ObjectValidationResult objectValidationResult = requestValidator.validate(request);
+      if (objectValidationResult.isInvalid()) {
         future.fail(Status.INVALID_ARGUMENT.asRuntimeException());
         return;
       }

@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {RegisterReply, RegisterRequest} from "../grpc/register_pb";
 import {RegisterClient} from "../grpc/register_grpc_web_pb";
 import * as grpcWeb from 'grpc-web';
+import {FormValidationService} from "../form-validation/form-validation-service/form-validation.service";
 
 @Component({
   selector: 'app-register',
@@ -13,8 +14,11 @@ export class RegisterComponent {
   serverError: grpcWeb.Error = null;
   formRequest: RegisterRequest = new RegisterRequest();
 
-  constructor(private registerClient: RegisterClient) {
-
+  constructor(
+    private registerClient: RegisterClient,
+    private formValidationService: FormValidationService
+  ) {
+    console.log(formValidationService);
   }
 
   submit() {

@@ -1,6 +1,6 @@
 package com.example.starter;
 
-import com.example.starter.gprc.Session;
+import com.example.starter.validation.ObjectValidator;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Promise;
@@ -20,7 +20,7 @@ public class MainVerticle extends AbstractVerticle {
     PRNG prng = new PRNG(vertx);
     RandomService randomService = new RandomService();
     JsonObject config = vertx.getOrCreateContext().config();
-    if  (config == null) {
+    if (config == null) {
       String confFilePath = System.getenv("JOGIT_CONF");
       config = new JsonObject(vertx.fileSystem().readFileBlocking(confFilePath));
     }
@@ -43,7 +43,7 @@ public class MainVerticle extends AbstractVerticle {
 
     LinuxService linuxService = new LinuxService(processExecutorAsRoot);
     UserRepositoryFactory userRepositoryFactory = new UserRepositoryFactory(userService, linuxService);
-    RegisterEndpoint registerEndpoint = new RegisterEndpoint(pgClient, userRepositoryFactory, authService);
+
     LoginEndpoint loginEndpoint = new LoginEndpoint(
       pgClient,
       userRepositoryFactory,
@@ -60,7 +60,7 @@ public class MainVerticle extends AbstractVerticle {
     }
     VertxServer rpcServer = VertxServerBuilder
       .forAddress(vertx, "localhost", port)
-      .addService(registerEndpoint)
+      .addService(newRegisterEndpoint(pgClient, authService, userRepositoryFactory))
       .addService(loginEndpoint)
       .addService(sessionEndpoint)
       .build();
@@ -74,5 +74,20 @@ public class MainVerticle extends AbstractVerticle {
           startPromise.fail(rpcServerStart.cause());
         }
       });
+  }
+
+  private RegisterEndpoint newRegisterEndpoint(
+    PgPool pgClient,
+    AuthenticationService authService,
+    UserRepositoryFactory userRepositoryFactory
+  ) throws IOException {
+    String registrationRequestValidationConstraints = StaticFileSystemService.readResourceToString("validation/registration.json");
+    ObjectValidator registerRequestValidator = new ObjectValidator(new JsonObject(registrationRequestValidationConstraints));
+    return new RegisterEndpoint(
+      pgClient,
+      userRepositoryFactory,
+      authService,
+      registerRequestValidator
+    );
   }
 }

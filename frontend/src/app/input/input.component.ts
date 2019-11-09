@@ -16,6 +16,7 @@ export class InputComponent extends InputLikeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
     this.form.addControl(this.input);
   }
 }

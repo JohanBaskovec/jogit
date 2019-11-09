@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NgForm} from "@angular/forms";
+import {PropertyConstraints} from "../form-validation/property-constraints";
 
 @Component({
   selector: 'app-input-like',
@@ -7,6 +8,8 @@ import {NgForm} from "@angular/forms";
   styleUrls: ['./input-like.component.sass']
 })
 export class InputLikeComponent implements OnInit {
+  @Input()
+  constraints: PropertyConstraints;
   @Input()
   form: NgForm;
   @Input()
@@ -34,6 +37,11 @@ export class InputLikeComponent implements OnInit {
     }
     if (this.label == null) {
       throw new Error("label required");
+    }
+    if (this.constraints != null) {
+      this.minLength = this.constraints.minLength;
+      this.maxLength = this.constraints.maxLength;
+      this.required = this.constraints.required;
     }
     this.name = this.label.toLowerCase().replace(/ /g, '_');
   }
