@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 public class ObjectValidator {
   private final JsonObject config;
@@ -42,8 +43,10 @@ public class ObjectValidator {
       try {
         Method getter = clazz.getMethod(propertyConstraints.getGetterName());
         Object value = getter.invoke(object);
-        if (propertyConstraints.isRequired() && value == null) {
-          propertyValidationResult.addError("Property " + propertyConstraints.getName() + " is required but is null");
+        if (value == null) {
+          if (propertyConstraints.isRequired()) {
+            propertyValidationResult.addError("Property " + propertyConstraints.getName() + " is required but is null");
+          }
         } else {
           int stringLength = -1;
           if (propertyConstraints.getMaxLength() != null) {
@@ -64,6 +67,15 @@ public class ObjectValidator {
                 + propertyConstraints.getName() + " has length of "
                 + stringLength + " but minimum length is "
                 + propertyConstraints.getMaxLength());
+            }
+          }
+          if (propertyConstraints.getPattern() != null) {
+            String valueAsString = (String) value;
+            Matcher matcher = propertyConstraints.getPattern().matcher(valueAsString);
+            if (!matcher.matches()) {
+              propertyValidationResult.addError("Property "
+              + propertyConstraints.getName() + " does not match pattern "
+              + propertyConstraints.getPattern().toString());
             }
           }
         }

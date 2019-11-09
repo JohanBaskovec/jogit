@@ -4,7 +4,8 @@
       "name": "username",
       "required": true,
       "minLength": 1,
-      "maxLength": 32
+      "maxLength": 32,
+      "pattern": "^[a-zA-Z0-9]*$"
     },
     {
       "name": "password",

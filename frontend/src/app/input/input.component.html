@@ -8,6 +8,7 @@
        [id]="name"
        [name]="name"
        [maxlength]="'' + maxLength"
+       [pattern]="pattern"
        #input="ngModel">
 <div *ngIf="input.invalid && (input.dirty || input.touched)"
      class="form-control-errors-container error">
@@ -17,6 +18,13 @@
   </div>
   <div *ngIf="input.errors.minlength">
     {{label}} must be at least {{minLength}} characters long.
+  </div>
+  <div *ngIf="input.errors.maxlength">
+    {{label}} must be at most {{minLength}} characters long.
+  </div>
+  <div *ngIf="input.errors.pattern">
+    <!-- TODO: display custom error messages -->
+    {{label}} must match pattern {{pattern}}.
   </div>
 
 </div>

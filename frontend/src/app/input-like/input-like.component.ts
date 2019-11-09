@@ -26,6 +26,8 @@ export class InputLikeComponent implements OnInit {
   maxLength: number;
   @Input()
   label: string = "";
+  @Input()
+  pattern: string;
 
   onChange(value: string) {
     this.valueChange.emit(value);
@@ -42,6 +44,7 @@ export class InputLikeComponent implements OnInit {
       this.minLength = this.constraints.minLength;
       this.maxLength = this.constraints.maxLength;
       this.required = this.constraints.required;
+      this.pattern = this.constraints.pattern;
     }
     this.name = this.label.toLowerCase().replace(/ /g, '_');
   }

@@ -6,8 +6,6 @@ import com.example.starter.gprc.RegisterRequest;
 import com.example.starter.gprc.User;
 import com.example.starter.validation.ObjectValidationResult;
 import com.example.starter.validation.ObjectValidator;
-import com.example.starter.validation.PropertyValidationResult;
-import com.google.common.base.Utf8;
 import io.grpc.Status;
 import io.vertx.core.Future;
 import io.vertx.pgclient.PgPool;

@@ -2,12 +2,15 @@ package com.example.starter.validation;
 
 import io.vertx.core.json.JsonObject;
 
+import java.util.regex.Pattern;
+
 public class PropertyConstraints {
   private boolean required;
   private Integer minLength;
   private Integer maxLength;
   private String name;
   private String getterName;
+  private Pattern pattern;
 
   public PropertyConstraints(JsonObject config) {
     Boolean required = config.getBoolean("required");
@@ -17,6 +20,10 @@ public class PropertyConstraints {
     this.minLength = config.getInteger("minLength");
     this.maxLength = config.getInteger("maxLength");
     this.setName(config.getString("name"));
+    String pattern = config.getString("pattern");
+    if (pattern != null) {
+      this.pattern = Pattern.compile(pattern);
+    }
   }
 
   public boolean isRequired() {
@@ -55,12 +62,17 @@ public class PropertyConstraints {
       throw new RuntimeException("Property constraints must have a name.");
     }
     this.name = name;
-    String nameCapitalized = name.substring(0, 1).toUpperCase() + name.substring(1);;
+    String nameCapitalized = name.substring(0, 1).toUpperCase() + name.substring(1);
+    ;
     getterName = "get" + nameCapitalized;
     return this;
   }
 
   public String getGetterName() {
     return getterName;
+  }
+
+  public Pattern getPattern() {
+    return pattern;
   }
 }

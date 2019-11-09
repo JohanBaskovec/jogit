@@ -3,6 +3,7 @@ export interface PropertyConstraintsOptions {
   minLength: number;
   maxLength: number;
   required: boolean;
+  pattern: string;
 }
 
 export class PropertyConstraints implements PropertyConstraintsOptions {
@@ -11,12 +12,14 @@ export class PropertyConstraints implements PropertyConstraintsOptions {
     this._minLength = options.minLength;
     this._maxLength = options.maxLength;
     this._required = options.required;
+    this._pattern = options.pattern;
   }
 
   private readonly _maxLength: number;
   private readonly _minLength: number;
   private readonly _name: string;
   private readonly _required: boolean;
+  private readonly _pattern: string;
 
   get maxLength(): number {
     return this._maxLength;
@@ -32,5 +35,9 @@ export class PropertyConstraints implements PropertyConstraintsOptions {
 
   get required(): boolean {
     return this._required;
+  }
+
+  get pattern(): string {
+    return this._pattern;
   }
 }
