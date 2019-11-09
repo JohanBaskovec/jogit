@@ -22,4 +22,8 @@ public class PropertyValidationResult {
   public void removeError(String error) {
     this.errors.remove(error);
   }
+
+  public int getErrorsCount() {
+    return errors.size();
+  }
 }

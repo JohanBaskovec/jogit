@@ -22,7 +22,13 @@ public class ObjectValidationResult {
   }
 
   public boolean isValid() {
-    return propertyValidationResultMap.size() == 0 && globalErrors.size() == 0;
+    boolean valid = true;
+    for (PropertyValidationResult propertyValidationResult : propertyValidationResultMap.values()) {
+      if (propertyValidationResult.getErrorsCount() != 0) {
+        return false;
+      }
+    }
+    return globalErrors.size() == 0;
   }
 
   public boolean isInvalid() {

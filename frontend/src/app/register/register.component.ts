@@ -13,6 +13,8 @@ export class RegisterComponent {
   serverResponse: string = "";
   serverError: grpcWeb.Error = null;
   formRequest: RegisterRequest = new RegisterRequest();
+  submitting: boolean;
+  formSubmittedWithoutError: boolean = true;
 
   constructor(
     private registerClient: RegisterClient,
@@ -22,11 +24,14 @@ export class RegisterComponent {
   }
 
   submit() {
+    this.submitting = true;
     this.registerClient.register(this.formRequest, {}, (err: grpcWeb.Error, response: RegisterReply) => {
       if (err) {
+        this.submitting = false;
         this.serverError = err;
         return;
       }
+      this.formSubmittedWithoutError = false;
     })
   }
 
