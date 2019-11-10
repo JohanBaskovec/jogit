@@ -5,17 +5,21 @@ import {
   Session
 } from "./grpc/session_pb";
 import {SessionServiceClient} from "./grpc/session_grpc_web_pb";
+import {ReplaySubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
-  private session: Session;
+  public readonly anonymousSession: Session = new Session();
+  private session = new ReplaySubject<Session>(1);
 
   constructor(private sessionServiceClient: SessionServiceClient) {
+    this.anonymousSession.setId("anonymous");
   }
 
   refreshSession() {
+    this.session.next(null);
     const request = new GetCurrentSessionRequest();
     request.setSessiontoken(this.getSessionToken());
     this.sessionServiceClient.getCurrentSession(
@@ -27,16 +31,16 @@ export class SessionService {
           return;
         }
         if (response.hasSession()) {
-          this.session = response.getSession()
+          this.session.next(response.getSession());
         } else {
-          this.session = null;
+          this.session.next(this.anonymousSession);
           this.setSessionToken(null);
         }
       }
     );
   }
 
-  getSession(): Session {
+  getSession(): ReplaySubject<Session> {
     return this.session;
   }
 
@@ -49,7 +53,11 @@ export class SessionService {
   }
 
   setSession(session: Session) {
-    this.session = session;
+    this.session.next(session);
     this.setSessionToken(session.getId());
+  }
+
+  sessionIsAnonymous(session: Session): boolean {
+    return session.getId() == "anonymous";
   }
 }

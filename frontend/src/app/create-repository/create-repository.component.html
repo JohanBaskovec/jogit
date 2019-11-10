@@ -1,0 +1,21 @@
+<ng-container *ngIf="!formSubmittedWithoutError; else formSubmitted">
+  <div *ngIf="error">
+    There was an error.
+  </div>
+  <form (ngSubmit)="submit()" #form="ngForm">
+    <app-form-group [label]="'Name'"
+                    [value]="request.getName()"
+                    (valueChange)="request.setName($event)"
+                    [constraints]="constraints.name"
+                    [form]="form"
+    >
+    </app-form-group>
+    <app-button [disabled]="form.pristine || form.invalid || submitting"
+                [label]="'Create repository'"
+                [type]="'submit'"
+    ></app-button>
+  </form>
+</ng-container>
+<ng-template #formSubmitted>
+  Repository {{request.getName()}} created!
+</ng-template>

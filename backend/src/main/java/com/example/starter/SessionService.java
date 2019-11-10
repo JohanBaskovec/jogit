@@ -18,6 +18,7 @@ public class SessionService {
     return Session.newBuilder()
       .setId(row.getString("session_id"))
       .setUser(this.userService.fromRow(row))
+      .setUserUsername(row.getString("session_user_username"))
       .build()
       ;
   }

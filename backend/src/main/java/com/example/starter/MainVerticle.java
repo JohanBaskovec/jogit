@@ -46,6 +46,7 @@ public class MainVerticle extends AbstractVerticle {
 
     SessionEndpoint sessionEndpoint = new SessionEndpoint(pgClient, sessionRepositoryFactory);
 
+    GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory = new GitRepositoryRepositoryFactory(gitRepositoryService);
     Integer port = config.getJsonObject("server").getInteger("port");
     if (port == null) {
       startPromise.fail("port must not be null.");
@@ -56,6 +57,7 @@ public class MainVerticle extends AbstractVerticle {
       .addService(newRegisterEndpoint(pgClient, authService, userRepositoryFactory))
       .addService(newLoginEndpoint(pgClient, sessionService, sessionRepositoryFactory, authService, userRepositoryFactory))
       .addService(sessionEndpoint)
+      .addService(newGitRepositoryEndpoint(pgClient, sessionRepositoryFactory, gitRepositoryRepositoryFactory))
       .build();
 
     rpcServer.start(
@@ -94,6 +96,26 @@ public class MainVerticle extends AbstractVerticle {
       userRepositoryFactory,
       authService,
       requestValidator
+    );
+  }
+
+  private GitRepositoryEndpoint newGitRepositoryEndpoint(
+    PgPool pgClient,
+    SessionRepositoryFactory sessionRepositoryFactory,
+    GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory
+  ) throws IOException {
+    // TODO: reuse constraints for fields that are common to multiple requests
+    // for example, reuse user's username in login, register, get user's git repositories
+    String createGitRepositoryConstraints = StaticFileSystemService.readResourceToString("validation/create_git_repository.json");
+    ObjectValidator createGitRepositoryRequestValidator = new ObjectValidator(new JsonObject(createGitRepositoryConstraints));
+    String getGitRepositoryRequestConstraints = StaticFileSystemService.readResourceToString("validation/get_user_git_repositories.json");
+    ObjectValidator getGitRepositoryByUserRequestValidator = new ObjectValidator(new JsonObject(getGitRepositoryRequestConstraints));
+    return new GitRepositoryEndpoint(
+      pgClient,
+      gitRepositoryRepositoryFactory,
+      sessionRepositoryFactory,
+      createGitRepositoryRequestValidator,
+      getGitRepositoryByUserRequestValidator
     );
   }
 

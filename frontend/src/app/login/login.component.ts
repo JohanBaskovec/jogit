@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {LoginClient} from "../grpc/login_grpc_web_pb";
 import {LoginReply, LoginRequest} from "../grpc/login_pb";
 import * as grpcWeb from 'grpc-web';
 import {SessionService} from "../session.service";
 import {FormValidationService} from "../form-validation/form-validation-service/form-validation.service";
-import {Status, StatusCode} from "grpc-web";
-import {AbstractControl, FormControl, NgForm, ValidationErrors} from "@angular/forms";
+import {NgForm} from "@angular/forms";
 import {InputComponent} from "../input/input.component";
+import {Status, StatusCode} from "grpc-web";
 
 @Component({
   selector: 'app-login',
@@ -41,7 +41,8 @@ export class LoginComponent {
     const stream = this.loginClient.login(
       this.formRequest,
       {},
-      () => {}
+      () => {
+      }
     );
     stream.on("data", (response: LoginReply) => {
       this.sessionService.setSession(response.getSession());

@@ -8,7 +8,7 @@ export class FormValidationService {
   constructor(
     public registration: ObjectConstraints,
     public login: ObjectConstraints,
+    public createGitRepository: ObjectConstraints,
   ) {
-    console.log(registration);
   }
 }

@@ -21,11 +21,18 @@ import registrationConstraints
   from '../../../backend/src/main/resources/validation/registration.json';
 // @ts-ignore
 import loginConstraints from '../../../backend/src/main/resources/validation/login.json';
+// @ts-ignore
+import createGitRepositoryConstraints
+  from '../../../backend/src/main/resources/validation/create_git_repository.json';
 import {FormValidationService} from "./form-validation/form-validation-service/form-validation.service";
 import {ObjectConstraints} from "./form-validation/object-contraints";
+import {GitRepositoryServiceClient} from "./grpc/git-repository_grpc_web_pb";
+import {UserPageModule} from "./user-page/user-page.module";
+import {CreateRepositoryComponent} from "./create-repository/create-repository.component";
 
 const applicationConfiguration = new ApplicationConfiguration();
 
+// @ts-ignore
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,10 +43,12 @@ const applicationConfiguration = new ApplicationConfiguration();
     FormGroupComponent,
     InputLikeComponent,
     ButtonComponent,
-    ErrorpageComponent
+    ErrorpageComponent,
+    CreateRepositoryComponent,
   ],
   imports: [
     BrowserModule,
+    UserPageModule,
     AppRoutingModule,
     FormsModule
   ],
@@ -57,9 +66,14 @@ const applicationConfiguration = new ApplicationConfiguration();
       useValue: new SessionServiceClient(applicationConfiguration.getBackendUrl())
     },
     {
+      provide: GitRepositoryServiceClient,
+      useValue: new GitRepositoryServiceClient(applicationConfiguration.getBackendUrl())
+    },
+    {
       provide: FormValidationService, useValue: new FormValidationService(
         new ObjectConstraints(registrationConstraints),
-        new ObjectConstraints(loginConstraints)
+        new ObjectConstraints(loginConstraints),
+        new ObjectConstraints(createGitRepositoryConstraints)
       )
     },
 

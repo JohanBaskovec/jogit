@@ -1,5 +1,8 @@
 package com.example.starter;
 
+import com.example.starter.gprc.GitRepository;
+import io.vertx.sqlclient.Row;
+
 import java.io.File;
 import java.nio.file.Path;
 
@@ -18,8 +21,10 @@ public class GitRepositoryService {
   }
 
   private void createUserOwnedDirectoryIfItDoesntExist(File directory, String userName) {
-    fileSystemService.createDirectoryAsRoot(directory);
-    fileSystemService.changeOwnerAndGroup(userName, userName, directory);
+    if (!directory.exists()) {
+      fileSystemService.createDirectoryAsRoot(directory);
+      fileSystemService.changeOwnerAndGroup(userName, userName, directory);
+    }
   }
 
   private File getOrCreateUserDirectory(String userName) {
@@ -44,7 +49,7 @@ public class GitRepositoryService {
     processExecutorAsRoot.execute(
       new ProcessBuilder()
         .directory(repositoryDirectory)
-        .command("git init --bare")
+        .command("git", "init", "--bare")
     );
     fileSystemService.changeOwnerAndGroup(userName, userName, repositoryDirectory);
   }
@@ -59,5 +64,12 @@ public class GitRepositoryService {
     File userDirectory = getOrCreateUserDirectory(userName);
     File repositoryDirectory = createRepositoryDirectory(userDirectory, userName, repositoryName);
     initializeGitBareRepository(repositoryDirectory, userName);
+  }
+
+  public GitRepository gitRepositoryFromRow(Row row) {
+    return GitRepository.newBuilder()
+      .setName(row.getString("git_repository_name"))
+      .setUserUserName(row.getString("git_repository_user_username"))
+      .build();
   }
 }

@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.starter.gprc";
+option java_outer_classname = "GitRepositoryProto";
+package helloworld;
+
+import "user.proto";
+
+service GitRepositoryService {
+  rpc Create (CreateGitRepositoryRequest) returns (CreateGitRepositoryReply) {}
+  rpc GetOfUser (GetGitRepositoryOfUserRequest) returns (GetGitRepositoryOfUserReply) {}
+}
+
+
+message GitRepository {
+  string name = 1;
+  string userUserName = 2;
+  User user = 3;
+}
+
+message CreateGitRepositoryRequest {
+  string name = 1;
+  string sessionToken = 2;
+}
+
+message CreateGitRepositoryReply {
+
+}
+
+message GetGitRepositoryOfUserRequest {
+  string username = 1;
+  string sessionToken = 2;
+}
+
+message GetGitRepositoryOfUserReply {
+  repeated GitRepository gitRepositories = 1;
+}
