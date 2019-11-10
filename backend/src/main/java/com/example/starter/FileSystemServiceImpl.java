@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileSystemServiceImpl implements FileSystemService {
-  private final Path appFileSystemRoot = Paths.get("/srv/jogit/");
+  private final Path appFileSystemRoot = Paths.get("/jogit/");
   private final ProcessExecutorAsRoot processExecutorAsRoot;
 
   public FileSystemServiceImpl(

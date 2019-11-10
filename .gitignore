@@ -1,6 +1,7 @@
 ### Vert.x ###
 backend/.vertx/
 conf.secret.json
+test-conf.secret.json
 
 ### Eclipse ###
 

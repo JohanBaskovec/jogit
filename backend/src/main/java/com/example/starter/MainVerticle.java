@@ -19,11 +19,8 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws IOException {
     PRNG prng = new PRNG(vertx);
     RandomService randomService = new RandomService();
-    JsonObject config = vertx.getOrCreateContext().config();
-    if (config == null) {
-      String confFilePath = System.getenv("JOGIT_CONF");
-      config = new JsonObject(vertx.fileSystem().readFileBlocking(confFilePath));
-    }
+    String confFilePath = System.getenv("JOGIT_CONF");
+    JsonObject config = new JsonObject(vertx.fileSystem().readFileBlocking(confFilePath));
     DatabaseService databaseService = new DatabaseService();
     String rootPassword = config.getString("rootPassword");
     ProcessExecutorAsRoot processExecutorAsRoot = new ProcessExecutorAsRootImpl(rootPassword);

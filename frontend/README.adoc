@@ -1,8 +1,21 @@
-=== Setup
-==== Install Protoc
+== Setup
+=== NodeJS
+Install version 12.13.0
+
+=== Angular
+```
+sudo npm install -g @angular/cli
+```
+
+=== Install dependencies
+```
+npm i
+```
+
+=== Install Protoc
 https://github.com/protocolbuffers/protobuf/releases
 
-==== Install gRPC web protoc plugin
+=== Install gRPC web protoc plugin
 https://github.com/grpc/grpc-web#code-generator-plugin
 
 === Generating gRPC client files

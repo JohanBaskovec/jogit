@@ -3,7 +3,12 @@
 A bad toy git web interface. Not scallable and not secure.
 
 == Setup for development
-These are the steps required to manually setup a Linux server for the application.
+
+=== Install OpenJDK 11
+```
+sudo apt update
+sudo apt-get install openjdk-11-jdk
+```
 
 === Install openssh-server
 The application requires SSH access, so that users can
@@ -17,26 +22,69 @@ using SSH from outside.
 sudo apt install openssh-server
 ```
 
+
+=== Create a user account for the application
+```
+sudo adduser jogit
+```
+
+During development, you must run the application as user jogit.
+
+To run IntelliJ as jogit and run the application as jogit when running it
+from inside IntelliJ, make the project folder (IdeaProjects/jogit) readable
+by all users, and allow all users to connect to
+the X server by running (from my normal account):
+```
+xhost +
+```
+
+And then
+```
+su jogit
+/home/<your-account>/idea-IU-192.7142.36/bin/idea.sh (or wherever your idea.sh is)
+```
+
 === Create the application directory structure
 ```
-mkdir /srv/jogit
-mkdir /srv/jogit/git
+mkdir /jogit
+chown -r jogit:jogit /jogit
+```
+
+=== Install Docker
+```
+sudo apt-get install docker
+sudo apt-get install docker-compose
 ```
 
 === Running the database and the Envoy proxy
+Start the docker daemon if it's not running
+
 ```
-docker-compose up
+sudo service docker start
+```
+
+```
+sudo docker-compose up
 ```
 
 Docker compose will:
 
 - run Postgres, create a database "jogitdev" and a user "postgres" with password
-"c4ef37c0fbd747da1c63c0f87d7c62df".
+"c4ef37c0fbd747da1c63c0f87d7c62df" and run on port 8092.
 - run the Envoy proxy, required for gRPC web.
 
 When the deployment is successful, you can access Envoy's
 admin interface at localhost:9902, and the backend server
 at localhost:8080
+
+=== Create a configuration file
+* Copy conf.example.json to conf.secret.json (it will not be committed because it's in .gitignore)
+* Copy conf.example.json to test-conf.secret.json (it will not be committed because it's in .gitignore)
+* Export the variable JOGIT_CONF and JOGIT_TEST_CONF
+```
+export JOGIT_CONF=<path to conf.secret.json>
+export JOGIT_TEST_CONF=<path to test-conf.secret.json>
+```
 
 === Setup the database schema
 Run schema/schema.sql.
@@ -58,12 +106,24 @@ Run schema/schema.sql.
 ./gradlew clean run
 ```
 
+== Setup in IntelliJ
+=== Setup modules
+* Open File -> Project Structure -> Project
+* Select Project SDK 11
+* Select Project language level 11
+* Set the Project compiler output to ./build
+
+=== Import Gradle Project
+Right click on build.gradle, click on "Import Gradle project", this will
+install all dependencies and make the Gradle menu available.
+
 == Debugging in IntelliJ
 Setup a new configuration:
 
 - Type: Application
 - Main class: io.vertx.core.Launcher
-- Program arguments: run com.example.starter.MainVerticle --conf conf.secret.json
+- Program arguments: run com.example.starter.MainVerticle
+- use classpath of module: starter.main
 
 == How to setup a git repository accessible through SSH
 These steps are done (or will be done...) by the application when creating a user
