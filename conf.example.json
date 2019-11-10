@@ -1,7 +1,7 @@
 {
   "rootPassword": "pv3DVc",
   "server": {
-    "port": 8089
+    "port": 8888
   },
   "database": {
     "port": 8092,

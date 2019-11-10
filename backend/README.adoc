@@ -22,32 +22,9 @@ using SSH from outside.
 sudo apt install openssh-server
 ```
 
-
-=== Create a user account for the application
-```
-sudo adduser jogit
-```
-
-During development, you must run the application as user jogit.
-
-To run IntelliJ as jogit and run the application as jogit when running it
-from inside IntelliJ, make the project folder (IdeaProjects/jogit) readable
-by all users, and allow all users to connect to
-the X server by running (from my normal account):
-```
-xhost +
-```
-
-And then
-```
-su jogit
-/home/<your-account>/idea-IU-192.7142.36/bin/idea.sh (or wherever your idea.sh is)
-```
-
 === Create the application directory structure
 ```
 mkdir /jogit
-chown -r jogit:jogit /jogit
 ```
 
 === Install Docker
@@ -79,6 +56,8 @@ at localhost:8080
 
 === Create a configuration file
 * Copy conf.example.json to conf.secret.json (it will not be committed because it's in .gitignore)
+* If you've changed the port from conf.example.json, you need to update it in
+front-envoy.yaml as well.
 * Copy conf.example.json to test-conf.secret.json (it will not be committed because it's in .gitignore)
 * Export the variable JOGIT_CONF and JOGIT_TEST_CONF
 ```
