@@ -1,6 +1,6 @@
 {{user.getUsername()}}'s repositories
 
 <div *ngFor="let repository of repositories">
-  {{repository.getName()}}
+  <a [routerLink]="[repository.getName()]">{{repository.getName()}}</a>
 </div>
 

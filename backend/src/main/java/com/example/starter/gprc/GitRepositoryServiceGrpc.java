@@ -110,6 +110,33 @@ public final class GitRepositoryServiceGrpc {
      return getGetOfUserMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.example.starter.gprc.GetGitRepositoryDirectoryRequest,
+      com.example.starter.gprc.GetGitRepositoryDirectoryReply> getGetDirectoryMethod;
+
+  public static io.grpc.MethodDescriptor<com.example.starter.gprc.GetGitRepositoryDirectoryRequest,
+      com.example.starter.gprc.GetGitRepositoryDirectoryReply> getGetDirectoryMethod() {
+    io.grpc.MethodDescriptor<com.example.starter.gprc.GetGitRepositoryDirectoryRequest, com.example.starter.gprc.GetGitRepositoryDirectoryReply> getGetDirectoryMethod;
+    if ((getGetDirectoryMethod = GitRepositoryServiceGrpc.getGetDirectoryMethod) == null) {
+      synchronized (GitRepositoryServiceGrpc.class) {
+        if ((getGetDirectoryMethod = GitRepositoryServiceGrpc.getGetDirectoryMethod) == null) {
+          GitRepositoryServiceGrpc.getGetDirectoryMethod = getGetDirectoryMethod = 
+              io.grpc.MethodDescriptor.<com.example.starter.gprc.GetGitRepositoryDirectoryRequest, com.example.starter.gprc.GetGitRepositoryDirectoryReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "helloworld.GitRepositoryService", "GetDirectory"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.starter.gprc.GetGitRepositoryDirectoryRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.example.starter.gprc.GetGitRepositoryDirectoryReply.getDefaultInstance()))
+                  .setSchemaDescriptor(new GitRepositoryServiceMethodDescriptorSupplier("GetDirectory"))
+                  .build();
+          }
+        }
+     }
+     return getGetDirectoryMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -158,6 +185,13 @@ public final class GitRepositoryServiceGrpc {
       asyncUnimplementedUnaryCall(getGetOfUserMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void getDirectory(com.example.starter.gprc.GetGitRepositoryDirectoryRequest request,
+        io.grpc.stub.StreamObserver<com.example.starter.gprc.GetGitRepositoryDirectoryReply> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetDirectoryMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -174,6 +208,13 @@ public final class GitRepositoryServiceGrpc {
                 com.example.starter.gprc.GetGitRepositoryOfUserRequest,
                 com.example.starter.gprc.GetGitRepositoryOfUserReply>(
                   this, METHODID_GET_OF_USER)))
+          .addMethod(
+            getGetDirectoryMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.example.starter.gprc.GetGitRepositoryDirectoryRequest,
+                com.example.starter.gprc.GetGitRepositoryDirectoryReply>(
+                  this, METHODID_GET_DIRECTORY)))
           .build();
     }
   }
@@ -211,6 +252,14 @@ public final class GitRepositoryServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getGetOfUserMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void getDirectory(com.example.starter.gprc.GetGitRepositoryDirectoryRequest request,
+        io.grpc.stub.StreamObserver<com.example.starter.gprc.GetGitRepositoryDirectoryReply> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetDirectoryMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -243,6 +292,13 @@ public final class GitRepositoryServiceGrpc {
     public com.example.starter.gprc.GetGitRepositoryOfUserReply getOfUser(com.example.starter.gprc.GetGitRepositoryOfUserRequest request) {
       return blockingUnaryCall(
           getChannel(), getGetOfUserMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.example.starter.gprc.GetGitRepositoryDirectoryReply getDirectory(com.example.starter.gprc.GetGitRepositoryDirectoryRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getGetDirectoryMethod(), getCallOptions(), request);
     }
   }
 
@@ -279,6 +335,14 @@ public final class GitRepositoryServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getGetOfUserMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.example.starter.gprc.GetGitRepositoryDirectoryReply> getDirectory(
+        com.example.starter.gprc.GetGitRepositoryDirectoryRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetDirectoryMethod(), getCallOptions()), request);
+    }
   }
 
   /**
@@ -299,6 +363,13 @@ public final class GitRepositoryServiceGrpc {
       asyncUnimplementedUnaryCall(getGetOfUserMethod(), GitRepositoryServiceGrpc.toObserver(response.completer()));
     }
 
+    /**
+     */
+    public void getDirectory(com.example.starter.gprc.GetGitRepositoryDirectoryRequest request,
+        io.vertx.core.Future<com.example.starter.gprc.GetGitRepositoryDirectoryReply> response) {
+      asyncUnimplementedUnaryCall(getGetDirectoryMethod(), GitRepositoryServiceGrpc.toObserver(response.completer()));
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -315,6 +386,13 @@ public final class GitRepositoryServiceGrpc {
                 com.example.starter.gprc.GetGitRepositoryOfUserRequest,
                 com.example.starter.gprc.GetGitRepositoryOfUserReply>(
                   this, METHODID_GET_OF_USER)))
+          .addMethod(
+            getGetDirectoryMethod(),
+            asyncUnaryCall(
+              new VertxMethodHandlers<
+                com.example.starter.gprc.GetGitRepositoryDirectoryRequest,
+                com.example.starter.gprc.GetGitRepositoryDirectoryReply>(
+                  this, METHODID_GET_DIRECTORY)))
           .build();
     }
   }
@@ -352,10 +430,19 @@ public final class GitRepositoryServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getGetOfUserMethod(), getCallOptions()), request, GitRepositoryServiceGrpc.toObserver(response));
     }
+
+    /**
+     */
+    public void getDirectory(com.example.starter.gprc.GetGitRepositoryDirectoryRequest request,
+        io.vertx.core.Handler<io.vertx.core.AsyncResult<com.example.starter.gprc.GetGitRepositoryDirectoryReply>> response) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetDirectoryMethod(), getCallOptions()), request, GitRepositoryServiceGrpc.toObserver(response));
+    }
   }
 
   private static final int METHODID_CREATE = 0;
   private static final int METHODID_GET_OF_USER = 1;
+  private static final int METHODID_GET_DIRECTORY = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -381,6 +468,10 @@ public final class GitRepositoryServiceGrpc {
         case METHODID_GET_OF_USER:
           serviceImpl.getOfUser((com.example.starter.gprc.GetGitRepositoryOfUserRequest) request,
               (io.grpc.stub.StreamObserver<com.example.starter.gprc.GetGitRepositoryOfUserReply>) responseObserver);
+          break;
+        case METHODID_GET_DIRECTORY:
+          serviceImpl.getDirectory((com.example.starter.gprc.GetGitRepositoryDirectoryRequest) request,
+              (io.grpc.stub.StreamObserver<com.example.starter.gprc.GetGitRepositoryDirectoryReply>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -431,6 +522,17 @@ public final class GitRepositoryServiceGrpc {
               (io.vertx.core.Future<com.example.starter.gprc.GetGitRepositoryOfUserReply>) io.vertx.core.Future.<com.example.starter.gprc.GetGitRepositoryOfUserReply>future().setHandler(ar -> {
                 if (ar.succeeded()) {
                   ((io.grpc.stub.StreamObserver<com.example.starter.gprc.GetGitRepositoryOfUserReply>) responseObserver).onNext(ar.result());
+                  responseObserver.onCompleted();
+                } else {
+                  responseObserver.onError(ar.cause());
+                }
+              }));
+          break;
+        case METHODID_GET_DIRECTORY:
+          serviceImpl.getDirectory((com.example.starter.gprc.GetGitRepositoryDirectoryRequest) request,
+              (io.vertx.core.Future<com.example.starter.gprc.GetGitRepositoryDirectoryReply>) io.vertx.core.Future.<com.example.starter.gprc.GetGitRepositoryDirectoryReply>future().setHandler(ar -> {
+                if (ar.succeeded()) {
+                  ((io.grpc.stub.StreamObserver<com.example.starter.gprc.GetGitRepositoryDirectoryReply>) responseObserver).onNext(ar.result());
                   responseObserver.onCompleted();
                 } else {
                   responseObserver.onError(ar.cause());
@@ -500,6 +602,7 @@ public final class GitRepositoryServiceGrpc {
               .setSchemaDescriptor(new GitRepositoryServiceFileDescriptorSupplier())
               .addMethod(getCreateMethod())
               .addMethod(getGetOfUserMethod())
+              .addMethod(getGetDirectoryMethod())
               .build();
         }
       }

@@ -39,16 +39,6 @@ proto.helloworld.LoginClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -75,16 +65,6 @@ proto.helloworld.LoginPromiseClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -99,7 +79,10 @@ const methodDescriptor_Login_Login = new grpc.web.MethodDescriptor(
   grpc.web.MethodType.UNARY,
   proto.helloworld.LoginRequest,
   proto.helloworld.LoginReply,
-  /** @param {!proto.helloworld.LoginRequest} request */
+  /**
+   * @param {!proto.helloworld.LoginRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -115,7 +98,10 @@ const methodDescriptor_Login_Login = new grpc.web.MethodDescriptor(
  */
 const methodInfo_Login_Login = new grpc.web.AbstractClientBase.MethodInfo(
   proto.helloworld.LoginReply,
-  /** @param {!proto.helloworld.LoginRequest} request */
+  /**
+   * @param {!proto.helloworld.LoginRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },

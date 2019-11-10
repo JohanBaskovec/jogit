@@ -54,7 +54,7 @@ public class MainVerticle extends AbstractVerticle {
       .addService(newRegisterEndpoint(pgClient, authService, userRepositoryFactory))
       .addService(newLoginEndpoint(pgClient, sessionService, sessionRepositoryFactory, authService, userRepositoryFactory))
       .addService(sessionEndpoint)
-      .addService(newGitRepositoryEndpoint(pgClient, sessionRepositoryFactory, gitRepositoryRepositoryFactory))
+      .addService(newGitRepositoryEndpoint(pgClient, sessionRepositoryFactory, gitRepositoryRepositoryFactory, gitRepositoryService))
       .build();
 
     rpcServer.start(
@@ -99,7 +99,8 @@ public class MainVerticle extends AbstractVerticle {
   private GitRepositoryEndpoint newGitRepositoryEndpoint(
     PgPool pgClient,
     SessionRepositoryFactory sessionRepositoryFactory,
-    GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory
+    GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory,
+    GitRepositoryService gitRepositoryService
   ) throws IOException {
     // TODO: reuse constraints for fields that are common to multiple requests
     // for example, reuse user's username in login, register, get user's git repositories
@@ -107,12 +108,17 @@ public class MainVerticle extends AbstractVerticle {
     ObjectValidator createGitRepositoryRequestValidator = new ObjectValidator(new JsonObject(createGitRepositoryConstraints));
     String getGitRepositoryRequestConstraints = StaticFileSystemService.readResourceToString("validation/get_user_git_repositories.json");
     ObjectValidator getGitRepositoryByUserRequestValidator = new ObjectValidator(new JsonObject(getGitRepositoryRequestConstraints));
+
+    String getGitRepositoryDirectoryRequestConstraints = StaticFileSystemService.readResourceToString("validation/get_git_repository_directory.json");
+    ObjectValidator getGitRepositoryDirectoryRequestValidator = new ObjectValidator(new JsonObject(getGitRepositoryDirectoryRequestConstraints));
     return new GitRepositoryEndpoint(
       pgClient,
       gitRepositoryRepositoryFactory,
       sessionRepositoryFactory,
       createGitRepositoryRequestValidator,
-      getGitRepositoryByUserRequestValidator
+      getGitRepositoryByUserRequestValidator,
+      getGitRepositoryDirectoryRequestValidator,
+      gitRepositoryService
     );
   }
 

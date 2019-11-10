@@ -5,6 +5,8 @@ import * as user_pb from './user_pb';
 import {
   CreateGitRepositoryReply,
   CreateGitRepositoryRequest,
+  GetGitRepositoryDirectoryReply,
+  GetGitRepositoryDirectoryRequest,
   GetGitRepositoryOfUserReply,
   GetGitRepositoryOfUserRequest} from './git-repository_pb';
 
@@ -27,6 +29,13 @@ export class GitRepositoryServiceClient {
                response: GetGitRepositoryOfUserReply) => void
   ): grpcWeb.ClientReadableStream<GetGitRepositoryOfUserReply>;
 
+  getDirectory(
+    request: GetGitRepositoryDirectoryRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.Error,
+               response: GetGitRepositoryDirectoryReply) => void
+  ): grpcWeb.ClientReadableStream<GetGitRepositoryDirectoryReply>;
+
 }
 
 export class GitRepositoryServicePromiseClient {
@@ -43,6 +52,11 @@ export class GitRepositoryServicePromiseClient {
     request: GetGitRepositoryOfUserRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<GetGitRepositoryOfUserReply>;
+
+  getDirectory(
+    request: GetGitRepositoryDirectoryRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<GetGitRepositoryDirectoryReply>;
 
 }
 

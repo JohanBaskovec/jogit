@@ -37,16 +37,6 @@ proto.helloworld.GreeterClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -73,16 +63,6 @@ proto.helloworld.GreeterPromiseClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -97,7 +77,10 @@ const methodDescriptor_Greeter_SayHello = new grpc.web.MethodDescriptor(
   grpc.web.MethodType.UNARY,
   proto.helloworld.HelloRequest,
   proto.helloworld.HelloReply,
-  /** @param {!proto.helloworld.HelloRequest} request */
+  /**
+   * @param {!proto.helloworld.HelloRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -113,7 +96,10 @@ const methodDescriptor_Greeter_SayHello = new grpc.web.MethodDescriptor(
  */
 const methodInfo_Greeter_SayHello = new grpc.web.AbstractClientBase.MethodInfo(
   proto.helloworld.HelloReply,
-  /** @param {!proto.helloworld.HelloRequest} request */
+  /**
+   * @param {!proto.helloworld.HelloRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },

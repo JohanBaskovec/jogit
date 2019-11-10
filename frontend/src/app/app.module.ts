@@ -3,32 +3,30 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule} from '@angular/forms';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {AccountComponent} from './account/account.component';
-import {RegisterClient} from "./grpc/register_grpc_web_pb";
-import {LoginClient} from "./grpc/login_grpc_web_pb";
-import {ApplicationConfiguration} from "./ApplicationConfiguration";
-import {SessionServiceClient} from "./grpc/session_grpc_web_pb";
+import {RegisterClient} from './grpc/register_grpc_web_pb';
+import {LoginClient} from './grpc/login_grpc_web_pb';
+import {ApplicationConfiguration} from './ApplicationConfiguration';
+import {SessionServiceClient} from './grpc/session_grpc_web_pb';
 import {InputComponent} from './input/input.component';
 import {FormGroupComponent} from './form-group/form-group.component';
 import {InputLikeComponent} from './input-like/input-like.component';
 import {ButtonComponent} from './button/button.component';
 import {ErrorpageComponent} from './errorpage/errorpage.component';
 // @ts-ignore
-import registrationConstraints
-  from '../../../backend/src/main/resources/validation/registration.json';
+import registrationConstraints from '../../../backend/src/main/resources/validation/registration.json';
 // @ts-ignore
 import loginConstraints from '../../../backend/src/main/resources/validation/login.json';
 // @ts-ignore
-import createGitRepositoryConstraints
-  from '../../../backend/src/main/resources/validation/create_git_repository.json';
-import {FormValidationService} from "./form-validation/form-validation-service/form-validation.service";
-import {ObjectConstraints} from "./form-validation/object-contraints";
-import {GitRepositoryServiceClient} from "./grpc/git-repository_grpc_web_pb";
-import {UserPageModule} from "./user-page/user-page.module";
-import {CreateRepositoryComponent} from "./create-repository/create-repository.component";
+import createGitRepositoryConstraints from '../../../backend/src/main/resources/validation/create_git_repository.json';
+import {FormValidationService} from './form-validation/form-validation-service/form-validation.service';
+import {ObjectConstraints} from './form-validation/object-contraints';
+import {GitRepositoryServiceClient} from './grpc/git-repository_grpc_web_pb';
+import {UserPageModule} from './user-page/user-page.module';
+import {CreateRepositoryComponent} from './create-repository/create-repository.component';
 
 const applicationConfiguration = new ApplicationConfiguration();
 

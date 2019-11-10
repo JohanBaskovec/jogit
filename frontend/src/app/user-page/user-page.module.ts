@@ -7,11 +7,13 @@ import {BrowserModule} from "@angular/platform-browser";
 import {AppRoutingModule} from "../app-routing.module";
 import {FormsModule} from "@angular/forms";
 import {UserPageRoutingModule} from "./user-page-routing.module";
+import {DirectoryComponent} from "./directory/directory.component";
 
 @NgModule({
   declarations: [
     UserPage,
     RepositoriesComponent,
+    DirectoryComponent,
   ],
   imports: [
     BrowserModule,

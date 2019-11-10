@@ -1,12 +1,6 @@
 package com.example.starter;
 
-import com.example.starter.gprc.CreateGitRepositoryReply;
-import com.example.starter.gprc.CreateGitRepositoryRequest;
-import com.example.starter.gprc.GetGitRepositoryOfUserReply;
-import com.example.starter.gprc.GetGitRepositoryOfUserRequest;
-import com.example.starter.gprc.GitRepository;
-import com.example.starter.gprc.GitRepositoryServiceGrpc;
-import com.example.starter.gprc.Session;
+import com.example.starter.gprc.*;
 import com.example.starter.validation.ObjectValidationResult;
 import com.example.starter.validation.ObjectValidator;
 import io.grpc.Status;
@@ -22,13 +16,17 @@ class GitRepositoryEndpoint extends GitRepositoryServiceGrpc.GitRepositoryServic
   private final SessionRepositoryFactory sessionRepositoryFactory;
   private final ObjectValidator createGitRepositoryRequestValidator;
   private final ObjectValidator getGitRepositoryByUserRequestValidator;
+  private ObjectValidator getGitRepositoryDirectoryRequestValidator;
+  private GitRepositoryService gitRepositoryService;
 
   GitRepositoryEndpoint(
     PgPool pgClient,
     GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory,
     SessionRepositoryFactory sessionRepositoryFactory,
     ObjectValidator createGitRepositoryRequestValidator,
-    ObjectValidator getGitRepositoryByUserRequestValidator
+    ObjectValidator getGitRepositoryByUserRequestValidator,
+    ObjectValidator getGitRepositoryDirectoryRequestValidator,
+    GitRepositoryService gitRepositoryService
   ) {
     super();
     this.pgClient = pgClient;
@@ -36,6 +34,8 @@ class GitRepositoryEndpoint extends GitRepositoryServiceGrpc.GitRepositoryServic
     this.sessionRepositoryFactory = sessionRepositoryFactory;
     this.createGitRepositoryRequestValidator = createGitRepositoryRequestValidator;
     this.getGitRepositoryByUserRequestValidator = getGitRepositoryByUserRequestValidator;
+    this.getGitRepositoryDirectoryRequestValidator = getGitRepositoryDirectoryRequestValidator;
+    this.gitRepositoryService = gitRepositoryService;
   }
 
   @Override
@@ -86,6 +86,8 @@ class GitRepositoryEndpoint extends GitRepositoryServiceGrpc.GitRepositoryServic
         response.fail(Status.INVALID_ARGUMENT.asRuntimeException());
         return;
       }
+
+      // TODO: check permissions
       requestContext.begin((Transaction transaction) -> {
         GitRepositoryRepository gitRepositoryRepository = gitRepositoryRepositoryFactory.get(transaction);
         gitRepositoryRepository.getByUsername(request.getUsername(), new ErrorHandler<List<GitRepository>, GetGitRepositoryOfUserReply>(requestContext) {
@@ -101,4 +103,49 @@ class GitRepositoryEndpoint extends GitRepositoryServiceGrpc.GitRepositoryServic
     });
   }
 
+  @Override
+  public void getDirectory(GetGitRepositoryDirectoryRequest request, Future<GetGitRepositoryDirectoryReply> response) {
+    RequestContext<GetGitRepositoryDirectoryRequest, GetGitRepositoryDirectoryReply> requestContext = new RequestContext<>(pgClient, request, response);
+    requestContext.run(() -> {
+      ObjectValidationResult objectValidationResult = getGitRepositoryDirectoryRequestValidator.validate(request);
+      // TODO: make a handle that automatically respond when result is invalid
+      if (objectValidationResult.isInvalid()) {
+        response.fail(Status.INVALID_ARGUMENT.asRuntimeException());
+        return;
+      }
+
+      requestContext.begin((Transaction transaction) -> {
+        SessionRepository sessionRepository = sessionRepositoryFactory.get(transaction);
+        sessionRepository.getSessionById(
+          request.getSessionToken(),
+          new ErrorHandler<Session, GetGitRepositoryDirectoryReply>(requestContext) {
+            @Override
+            public void handleSuccess(Session session) {
+              // TODO: make a handle that automatically respond when not authenticated
+              if (session == null) {
+                requestContext.handle(Future.failedFuture(Status.UNAUTHENTICATED.asException()));
+                return;
+              }
+              GitRepositoryRepository gitRepositoryRepository = gitRepositoryRepositoryFactory.get(transaction);
+              gitRepositoryRepository.getByUsernameAndName(
+                request.getUsername(),
+                request.getRepository(),
+                new ErrorHandler<GitRepository, GetGitRepositoryDirectoryReply>(handler) {
+                  @Override
+                  public void handleSuccess(GitRepository result) {
+                    if (result == null) {
+                      handler.handle(Future.failedFuture(Status.NOT_FOUND.asRuntimeException()));
+                      return;
+                    }
+                    List<FileMetadata> files = gitRepositoryService.getDirectoryContent(result, request.getDirectoryPath());
+                    GetGitRepositoryDirectoryReply reply = GetGitRepositoryDirectoryReply.newBuilder().addAllFiles(files).build();
+                    handler.handle(Future.succeededFuture(reply));
+                  }
+                }
+              );
+            }
+          });
+      });
+    });
+  }
 }

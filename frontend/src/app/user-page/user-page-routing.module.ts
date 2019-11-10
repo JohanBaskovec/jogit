@@ -1,7 +1,8 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {UserPage} from "./user-page.component";
-import {RepositoriesComponent} from "./repositories/repositories.component";
+import {UserPage} from './user-page.component';
+import {RepositoriesComponent} from './repositories/repositories.component';
+import {DirectoryComponent} from './directory/directory.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,10 @@ const routes: Routes = [
       {
         path: '',
         component: RepositoriesComponent,
-
+      },
+      {
+        path: ':directoryPath',
+        component: DirectoryComponent,
       }
     ]
   },

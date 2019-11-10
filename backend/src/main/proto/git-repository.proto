@@ -10,6 +10,7 @@ import "user.proto";
 service GitRepositoryService {
   rpc Create (CreateGitRepositoryRequest) returns (CreateGitRepositoryReply) {}
   rpc GetOfUser (GetGitRepositoryOfUserRequest) returns (GetGitRepositoryOfUserReply) {}
+  rpc GetDirectory (GetGitRepositoryDirectoryRequest) returns (GetGitRepositoryDirectoryReply) {}
 }
 
 
@@ -35,4 +36,25 @@ message GetGitRepositoryOfUserRequest {
 
 message GetGitRepositoryOfUserReply {
   repeated GitRepository gitRepositories = 1;
+}
+
+message GetGitRepositoryDirectoryRequest {
+  string sessionToken = 1;
+  string username = 2;
+  string repository = 3;
+  string directoryPath = 4;
+}
+
+message GetGitRepositoryDirectoryReply {
+  string username = 1;
+  string repository = 2;
+  string directoryPath = 3;
+  repeated FileMetadata files = 4;
+}
+
+message FileMetadata {
+  string type = 1;
+  string sha1 = 2;
+  int64 size = 3;
+  string name = 4;
 }

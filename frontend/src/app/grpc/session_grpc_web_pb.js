@@ -39,16 +39,6 @@ proto.helloworld.SessionServiceClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -75,16 +65,6 @@ proto.helloworld.SessionServicePromiseClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -99,7 +79,10 @@ const methodDescriptor_SessionService_getCurrentSession = new grpc.web.MethodDes
   grpc.web.MethodType.UNARY,
   proto.helloworld.GetCurrentSessionRequest,
   proto.helloworld.GetCurrentSessionReply,
-  /** @param {!proto.helloworld.GetCurrentSessionRequest} request */
+  /**
+   * @param {!proto.helloworld.GetCurrentSessionRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -115,7 +98,10 @@ const methodDescriptor_SessionService_getCurrentSession = new grpc.web.MethodDes
  */
 const methodInfo_SessionService_getCurrentSession = new grpc.web.AbstractClientBase.MethodInfo(
   proto.helloworld.GetCurrentSessionReply,
-  /** @param {!proto.helloworld.GetCurrentSessionRequest} request */
+  /**
+   * @param {!proto.helloworld.GetCurrentSessionRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },

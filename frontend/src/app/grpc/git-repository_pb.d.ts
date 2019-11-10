@@ -108,3 +108,95 @@ export namespace GetGitRepositoryOfUserReply {
   }
 }
 
+export class GetGitRepositoryDirectoryRequest extends jspb.Message {
+  getSessiontoken(): string;
+  setSessiontoken(value: string): void;
+
+  getUsername(): string;
+  setUsername(value: string): void;
+
+  getRepository(): string;
+  setRepository(value: string): void;
+
+  getDirectorypath(): string;
+  setDirectorypath(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetGitRepositoryDirectoryRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetGitRepositoryDirectoryRequest): GetGitRepositoryDirectoryRequest.AsObject;
+  static serializeBinaryToWriter(message: GetGitRepositoryDirectoryRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetGitRepositoryDirectoryRequest;
+  static deserializeBinaryFromReader(message: GetGitRepositoryDirectoryRequest, reader: jspb.BinaryReader): GetGitRepositoryDirectoryRequest;
+}
+
+export namespace GetGitRepositoryDirectoryRequest {
+  export type AsObject = {
+    sessiontoken: string,
+    username: string,
+    repository: string,
+    directorypath: string,
+  }
+}
+
+export class GetGitRepositoryDirectoryReply extends jspb.Message {
+  getUsername(): string;
+  setUsername(value: string): void;
+
+  getRepository(): string;
+  setRepository(value: string): void;
+
+  getDirectorypath(): string;
+  setDirectorypath(value: string): void;
+
+  getFilesList(): Array<FileMetadata>;
+  setFilesList(value: Array<FileMetadata>): void;
+  clearFilesList(): void;
+  addFiles(value?: FileMetadata, index?: number): FileMetadata;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetGitRepositoryDirectoryReply.AsObject;
+  static toObject(includeInstance: boolean, msg: GetGitRepositoryDirectoryReply): GetGitRepositoryDirectoryReply.AsObject;
+  static serializeBinaryToWriter(message: GetGitRepositoryDirectoryReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetGitRepositoryDirectoryReply;
+  static deserializeBinaryFromReader(message: GetGitRepositoryDirectoryReply, reader: jspb.BinaryReader): GetGitRepositoryDirectoryReply;
+}
+
+export namespace GetGitRepositoryDirectoryReply {
+  export type AsObject = {
+    username: string,
+    repository: string,
+    directorypath: string,
+    filesList: Array<FileMetadata.AsObject>,
+  }
+}
+
+export class FileMetadata extends jspb.Message {
+  getType(): string;
+  setType(value: string): void;
+
+  getSha1(): string;
+  setSha1(value: string): void;
+
+  getSize(): number;
+  setSize(value: number): void;
+
+  getName(): string;
+  setName(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): FileMetadata.AsObject;
+  static toObject(includeInstance: boolean, msg: FileMetadata): FileMetadata.AsObject;
+  static serializeBinaryToWriter(message: FileMetadata, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): FileMetadata;
+  static deserializeBinaryFromReader(message: FileMetadata, reader: jspb.BinaryReader): FileMetadata;
+}
+
+export namespace FileMetadata {
+  export type AsObject = {
+    type: string,
+    sha1: string,
+    size: number,
+    name: string,
+  }
+}
+

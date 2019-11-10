@@ -39,16 +39,6 @@ proto.helloworld.GitRepositoryServiceClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -75,16 +65,6 @@ proto.helloworld.GitRepositoryServicePromiseClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -99,7 +79,10 @@ const methodDescriptor_GitRepositoryService_Create = new grpc.web.MethodDescript
   grpc.web.MethodType.UNARY,
   proto.helloworld.CreateGitRepositoryRequest,
   proto.helloworld.CreateGitRepositoryReply,
-  /** @param {!proto.helloworld.CreateGitRepositoryRequest} request */
+  /**
+   * @param {!proto.helloworld.CreateGitRepositoryRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -115,7 +98,10 @@ const methodDescriptor_GitRepositoryService_Create = new grpc.web.MethodDescript
  */
 const methodInfo_GitRepositoryService_Create = new grpc.web.AbstractClientBase.MethodInfo(
   proto.helloworld.CreateGitRepositoryReply,
-  /** @param {!proto.helloworld.CreateGitRepositoryRequest} request */
+  /**
+   * @param {!proto.helloworld.CreateGitRepositoryRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -173,7 +159,10 @@ const methodDescriptor_GitRepositoryService_GetOfUser = new grpc.web.MethodDescr
   grpc.web.MethodType.UNARY,
   proto.helloworld.GetGitRepositoryOfUserRequest,
   proto.helloworld.GetGitRepositoryOfUserReply,
-  /** @param {!proto.helloworld.GetGitRepositoryOfUserRequest} request */
+  /**
+   * @param {!proto.helloworld.GetGitRepositoryOfUserRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -189,7 +178,10 @@ const methodDescriptor_GitRepositoryService_GetOfUser = new grpc.web.MethodDescr
  */
 const methodInfo_GitRepositoryService_GetOfUser = new grpc.web.AbstractClientBase.MethodInfo(
   proto.helloworld.GetGitRepositoryOfUserReply,
-  /** @param {!proto.helloworld.GetGitRepositoryOfUserRequest} request */
+  /**
+   * @param {!proto.helloworld.GetGitRepositoryOfUserRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -233,6 +225,86 @@ proto.helloworld.GitRepositoryServicePromiseClient.prototype.getOfUser =
       request,
       metadata || {},
       methodDescriptor_GitRepositoryService_GetOfUser);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.helloworld.GetGitRepositoryDirectoryRequest,
+ *   !proto.helloworld.GetGitRepositoryDirectoryReply>}
+ */
+const methodDescriptor_GitRepositoryService_GetDirectory = new grpc.web.MethodDescriptor(
+  '/helloworld.GitRepositoryService/GetDirectory',
+  grpc.web.MethodType.UNARY,
+  proto.helloworld.GetGitRepositoryDirectoryRequest,
+  proto.helloworld.GetGitRepositoryDirectoryReply,
+  /**
+   * @param {!proto.helloworld.GetGitRepositoryDirectoryRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.helloworld.GetGitRepositoryDirectoryReply.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.helloworld.GetGitRepositoryDirectoryRequest,
+ *   !proto.helloworld.GetGitRepositoryDirectoryReply>}
+ */
+const methodInfo_GitRepositoryService_GetDirectory = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.helloworld.GetGitRepositoryDirectoryReply,
+  /**
+   * @param {!proto.helloworld.GetGitRepositoryDirectoryRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.helloworld.GetGitRepositoryDirectoryReply.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.helloworld.GetGitRepositoryDirectoryRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.helloworld.GetGitRepositoryDirectoryReply)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.helloworld.GetGitRepositoryDirectoryReply>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.helloworld.GitRepositoryServiceClient.prototype.getDirectory =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/helloworld.GitRepositoryService/GetDirectory',
+      request,
+      metadata || {},
+      methodDescriptor_GitRepositoryService_GetDirectory,
+      callback);
+};
+
+
+/**
+ * @param {!proto.helloworld.GetGitRepositoryDirectoryRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.helloworld.GetGitRepositoryDirectoryReply>}
+ *     A native promise that resolves to the response
+ */
+proto.helloworld.GitRepositoryServicePromiseClient.prototype.getDirectory =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/helloworld.GitRepositoryService/GetDirectory',
+      request,
+      metadata || {},
+      methodDescriptor_GitRepositoryService_GetDirectory);
 };
 
 

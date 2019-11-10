@@ -37,16 +37,6 @@ proto.helloworld.RegisterClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -73,16 +63,6 @@ proto.helloworld.RegisterPromiseClient =
    */
   this.hostname_ = hostname;
 
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -97,7 +77,10 @@ const methodDescriptor_Register_Register = new grpc.web.MethodDescriptor(
   grpc.web.MethodType.UNARY,
   proto.helloworld.RegisterRequest,
   proto.helloworld.RegisterReply,
-  /** @param {!proto.helloworld.RegisterRequest} request */
+  /**
+   * @param {!proto.helloworld.RegisterRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },
@@ -113,7 +96,10 @@ const methodDescriptor_Register_Register = new grpc.web.MethodDescriptor(
  */
 const methodInfo_Register_Register = new grpc.web.AbstractClientBase.MethodInfo(
   proto.helloworld.RegisterReply,
-  /** @param {!proto.helloworld.RegisterRequest} request */
+  /**
+   * @param {!proto.helloworld.RegisterRequest} request
+   * @return {!Uint8Array}
+   */
   function(request) {
     return request.serializeBinary();
   },

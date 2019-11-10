@@ -1,0 +1,31 @@
+{
+  "__comment": "If modifying this file, don't forget to update registration.json!!!",
+  "propertyConstraints": [
+    {
+      "name": "username",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-zA-Z0-9]*$"
+    },
+    {
+      "name": "directoryPath",
+      "required": true,
+      "minLength": 0,
+      "maxLength": 100
+    },
+    {
+      "name": "repository",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[a-zA-Z0-9]*$"
+    },
+    {
+      "name": "sessionToken",
+      "required": true,
+      "minLength": 128,
+      "maxLength": 128
+    }
+  ]
+}

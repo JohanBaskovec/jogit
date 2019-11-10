@@ -66,7 +66,7 @@ public class ObjectValidator {
               propertyValidationResult.addError("Property "
                 + propertyConstraints.getName() + " has length of "
                 + stringLength + " but minimum length is "
-                + propertyConstraints.getMaxLength());
+                + propertyConstraints.getMinLength());
             }
           }
           if (propertyConstraints.getPattern() != null) {

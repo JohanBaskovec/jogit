@@ -22,9 +22,12 @@ public class GitRepositoryRepository {
 
   private static String insertQuery ;
 
+  private static String selectByUserNameAndNameQuery;
+
   static {
     try {
       selectByUserNameQuery = StaticFileSystemService.readResourceToString("sql/git_repository/select_by_username.sql");
+      selectByUserNameAndNameQuery = StaticFileSystemService.readResourceToString("sql/git_repository/select_by_username_and_name.sql");
       insertQuery = StaticFileSystemService.readResourceToString("sql/git_repository/insert.sql");
     } catch (IOException e) {
       e.printStackTrace();
@@ -51,6 +54,24 @@ public class GitRepositoryRepository {
             result.add(gitRepositoryService.gitRepositoryFromRow(row));
           }
           handler.handle(Future.succeededFuture(result));
+        }
+      });
+  }
+
+  void getByUsernameAndName(String username, String name, Handler<AsyncResult<GitRepository>> handler) {
+    transaction.preparedQuery(
+      selectByUserNameAndNameQuery,
+      Tuple.of(username, name),
+      new ErrorHandler<RowSet<Row>, GitRepository>(handler) {
+        @Override
+        public void handleSuccess(RowSet<Row> rows) {
+          if (rows.size() == 0) {
+            handler.handle(Future.succeededFuture());
+          }
+          RowIterator<Row> it = rows.iterator();
+          Row row = it.next();
+          GitRepository gitRepository = gitRepositoryService.gitRepositoryFromRow(row);
+          handler.handle(Future.succeededFuture(gitRepository));
         }
       });
   }

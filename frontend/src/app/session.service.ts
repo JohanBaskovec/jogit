@@ -44,7 +44,7 @@ export class SessionService {
     return this.session;
   }
 
-  private getSessionToken() {
+  getSessionToken() {
     return window.localStorage.sessionToken;
   }
 
