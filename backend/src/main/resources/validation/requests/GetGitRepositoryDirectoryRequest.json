@@ -3,10 +3,7 @@
   "propertyConstraints": [
     {
       "name": "username",
-      "required": true,
-      "minLength": 1,
-      "maxLength": 32,
-      "pattern": "^[a-zA-Z0-9]*$"
+      "schema": "User.username"
     },
     {
       "name": "directoryPath",
@@ -16,16 +13,11 @@
     },
     {
       "name": "repository",
-      "required": true,
-      "minLength": 1,
-      "maxLength": 100,
-      "pattern": "^[a-zA-Z0-9]*$"
+      "schema": "GitRepository.name"
     },
     {
       "name": "sessionToken",
-      "required": true,
-      "minLength": 128,
-      "maxLength": 128
+      "schema": "Session.id"
     }
   ]
 }

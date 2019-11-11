@@ -1,12 +1,12 @@
 import {Component, ViewChild} from '@angular/core';
-import {LoginClient} from "../grpc/login_grpc_web_pb";
-import {LoginReply, LoginRequest} from "../grpc/login_pb";
+import {LoginClient} from '../grpc/login_grpc_web_pb';
+import {LoginReply, LoginRequest} from '../grpc/login_pb';
 import * as grpcWeb from 'grpc-web';
-import {SessionService} from "../session.service";
-import {FormValidationService} from "../form-validation/form-validation-service/form-validation.service";
-import {NgForm} from "@angular/forms";
-import {InputComponent} from "../input/input.component";
-import {Status, StatusCode} from "grpc-web";
+import {SessionService} from '../session.service';
+import {FormValidationService} from '../form-validation/form-validation-service/form-validation.service';
+import {NgForm} from '@angular/forms';
+import {InputComponent} from '../input/input.component';
+import {Status, StatusCode} from 'grpc-web';
 
 @Component({
   selector: 'app-login',
@@ -17,15 +17,15 @@ export class LoginComponent {
   formRequest: LoginRequest = new LoginRequest();
   formSubmittedWithoutError: boolean = false;
   submitting: boolean;
-  @ViewChild("username")
+  @ViewChild('username')
   usernameComponent: InputComponent;
-  @ViewChild("password")
+  @ViewChild('password')
   passwordComponent: InputComponent;
 
 
-  @ViewChild("form")
+  @ViewChild('form')
   form: NgForm;
-  private wrongUsernameOrPassword: boolean = false;
+  private wrongUsernameOrPassword = false;
 
   constructor(
     private loginClient: LoginClient,
@@ -37,22 +37,22 @@ export class LoginComponent {
 
   submit() {
     this.submitting = true;
-    console.log("call");
+    console.log('call');
     const stream = this.loginClient.login(
       this.formRequest,
       {},
       () => {
       }
     );
-    stream.on("data", (response: LoginReply) => {
+    stream.on('data', (response: LoginReply) => {
       this.sessionService.setSession(response.getSession());
     });
-    stream.on("error", (error: grpcWeb.Error) => {
+    stream.on('error', (error: grpcWeb.Error) => {
       if (error.code == StatusCode.UNAUTHENTICATED) {
         this.wrongUsernameOrPassword = true;
         this.usernameComponent.control.setErrors({
           other: [
-            "Invalid username or password."
+            'Invalid username or password.'
           ]
         });
         // force the input to be invalid without any specific error message
@@ -61,24 +61,24 @@ export class LoginComponent {
       console.log(error);
       this.submitting = false;
     });
-    stream.on("status", (status: Status) => {
+    stream.on('status', (status: Status) => {
       console.log(status);
     });
-    stream.on("end", () => {
+    stream.on('end', () => {
       this.submitting = false;
-      console.log("end");
+      console.log('end');
     });
 
   }
 
   onUsernameChange(username: string) {
     this.formRequest.setUsername(username);
-    this.onChange()
+    this.onChange();
   }
 
   onPasswordChange(password: string) {
     this.formRequest.setPassword(password);
-    this.onChange()
+    this.onChange();
   }
 
   private onChange() {

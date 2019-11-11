@@ -1,0 +1,9 @@
+[
+  {
+    "name": "name",
+    "required": true,
+    "minLength": 1,
+    "maxLength": 100,
+    "pattern": "^[a-zA-Z0-9]*$"
+  }
+]

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import {CreateGitRepositoryRequest} from "../grpc/git-repository_pb";
-import {SessionService} from "../session.service";
-import {Session} from "../grpc/session_pb";
-import {GitRepositoryServiceClient} from "../grpc/git-repository_grpc_web_pb";
-import {FormValidationService} from "../form-validation/form-validation-service/form-validation.service";
-import {PropertyConstraints} from "../form-validation/property-constraints";
+import {Component, OnInit} from '@angular/core';
+import {CreateGitRepositoryRequest} from '../grpc/git-repository_pb';
+import {SessionService} from '../session.service';
+import {Session} from '../grpc/session_pb';
+import {GitRepositoryServiceClient} from '../grpc/git-repository_grpc_web_pb';
+import {FormValidationService} from '../form-validation/form-validation-service/form-validation.service';
+import {PropertyConstraints} from '../form-validation/property-constraints';
 
 @Component({
   selector: 'app-create-repository',
@@ -15,7 +15,7 @@ export class CreateRepositoryComponent implements OnInit {
   formSubmittedWithoutError: boolean;
   request: CreateGitRepositoryRequest = new CreateGitRepositoryRequest();
   error: boolean;
-  constraints: { [p: string]: PropertyConstraints };
+  constraints: { [p: string]: PropertyConstraints } = {};
   submitting: boolean;
 
   constructor(
@@ -23,7 +23,7 @@ export class CreateRepositoryComponent implements OnInit {
     private gitServiceClient: GitRepositoryServiceClient,
     private formValidationService: FormValidationService
   ) {
-    this.constraints = formValidationService.createGitRepository.constraints;
+    this.constraints = formValidationService.createGitRepository;
   }
 
   ngOnInit() {
@@ -51,6 +51,6 @@ export class CreateRepositoryComponent implements OnInit {
           this.formSubmittedWithoutError = true;
         });
 
-      })
+      });
   }
 }

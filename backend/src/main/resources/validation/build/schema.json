@@ -1,0 +1,134 @@
+{
+  "requests" : {
+    "RegisterRequest" : {
+      "password" : {
+        "required" : true,
+        "minLength" : 8,
+        "maxLength" : 256,
+        "name" : "password",
+        "getterName" : "getPassword",
+        "pattern" : null
+      },
+      "username" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 32,
+        "name" : "username",
+        "getterName" : "getUsername",
+        "pattern" : "^[a-zA-Z0-9]*$"
+      }
+    },
+    "GetGitRepositoryOfUserRequest" : {
+      "username" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 32,
+        "name" : "username",
+        "getterName" : "getUsername",
+        "pattern" : "^[a-zA-Z0-9]*$"
+      }
+    },
+    "CreateGitRepositoryRequest" : {
+      "name" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 100,
+        "name" : "name",
+        "getterName" : "getName",
+        "pattern" : "^[a-zA-Z0-9]*$"
+      }
+    },
+    "LoginRequest" : {
+      "password" : {
+        "required" : true,
+        "minLength" : 8,
+        "maxLength" : 256,
+        "name" : "password",
+        "getterName" : "getPassword",
+        "pattern" : null
+      },
+      "username" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 32,
+        "name" : "username",
+        "getterName" : "getUsername",
+        "pattern" : "^[a-zA-Z0-9]*$"
+      }
+    },
+    "GetGitRepositoryDirectoryRequest" : {
+      "directoryPath" : {
+        "required" : true,
+        "minLength" : 0,
+        "maxLength" : 100,
+        "name" : "directoryPath",
+        "getterName" : "getDirectoryPath",
+        "pattern" : null
+      },
+      "sessionToken" : {
+        "required" : true,
+        "minLength" : 128,
+        "maxLength" : 128,
+        "name" : "sessionToken",
+        "getterName" : "getSessionToken",
+        "pattern" : null
+      },
+      "repository" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 100,
+        "name" : "repository",
+        "getterName" : "getRepository",
+        "pattern" : "^[a-zA-Z0-9]*$"
+      },
+      "username" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 32,
+        "name" : "username",
+        "getterName" : "getUsername",
+        "pattern" : "^[a-zA-Z0-9]*$"
+      }
+    }
+  },
+  "definitions" : {
+    "GitRepository" : {
+      "name" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 100,
+        "name" : "name",
+        "getterName" : "getName",
+        "pattern" : "^[a-zA-Z0-9]*$"
+      }
+    },
+    "User" : {
+      "password" : {
+        "required" : true,
+        "minLength" : 8,
+        "maxLength" : 256,
+        "name" : "password",
+        "getterName" : "getPassword",
+        "pattern" : null
+      },
+      "username" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 32,
+        "name" : "username",
+        "getterName" : "getUsername",
+        "pattern" : "^[a-zA-Z0-9]*$"
+      }
+    },
+    "Session" : {
+      "id" : {
+        "required" : true,
+        "minLength" : 128,
+        "maxLength" : 128,
+        "name" : "id",
+        "getterName" : "getId",
+        "pattern" : null
+      }
+    }
+  }
+}

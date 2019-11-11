@@ -15,22 +15,14 @@ public class ObjectValidator {
 
   public ObjectValidator(JsonObject config) {
     this.config = config;
-
-    JsonArray propertyConstraints = config.getJsonArray("propertyConstraints");
-
-    if (propertyConstraints != null) {
-      parsePropertyConstraints(propertyConstraints);
-    }
+    parsePropertyConstraints(config);
   }
 
-  private void parsePropertyConstraints(JsonArray propertyConstraintsJsonArray) {
-    for (Object jsonElement : propertyConstraintsJsonArray) {
-      if (!(jsonElement instanceof JsonObject)) {
-        throw new RuntimeException("Field constraint must be a json object");
-      }
-      JsonObject jsonObject = (JsonObject) jsonElement;
-      PropertyConstraints propertyConstraints = new PropertyConstraints(jsonObject);
-      propertiesConstraints.add(propertyConstraints);
+  private void parsePropertyConstraints(JsonObject propertyConstraints) {
+    for (String propertyName : propertyConstraints.fieldNames()) {
+      JsonObject jsonObject = propertyConstraints.getJsonObject(propertyName);
+      PropertyConstraints propertyConstraint = new PropertyConstraints(jsonObject);
+      propertiesConstraints.add(propertyConstraint);
     }
   }
 

@@ -3,16 +3,11 @@
   "propertyConstraints": [
     {
       "name": "username",
-      "required": true,
-      "minLength": 1,
-      "maxLength": 32,
-      "pattern": "^[a-zA-Z0-9]*$"
+      "schema": "User.username"
     },
     {
       "name": "password",
-      "required": true,
-      "minLength": 8,
-      "maxLength": 256
+      "schema": "User.password"
     }
   ]
 }

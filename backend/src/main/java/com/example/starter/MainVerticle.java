@@ -1,5 +1,8 @@
 package com.example.starter;
 
+import com.example.starter.gprc.CreateGitRepositoryRequest;
+import com.example.starter.gprc.GetGitRepositoryDirectoryRequest;
+import com.example.starter.gprc.GetGitRepositoryOfUserRequest;
 import com.example.starter.validation.ObjectValidator;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
@@ -49,12 +52,32 @@ public class MainVerticle extends AbstractVerticle {
       startPromise.fail("port must not be null.");
       return;
     }
+    JsonObject schema = new JsonObject(StaticFileSystemService.readResourceToString("validation/build/schema.json"));
+
     VertxServer rpcServer = VertxServerBuilder
       .forAddress(vertx, "localhost", port)
-      .addService(newRegisterEndpoint(pgClient, authService, userRepositoryFactory))
-      .addService(newLoginEndpoint(pgClient, sessionService, sessionRepositoryFactory, authService, userRepositoryFactory))
+      .addService(newRegisterEndpoint(
+        pgClient,
+        authService,
+        userRepositoryFactory,
+        schema.getJsonObject("requests")
+      ))
+      .addService(newLoginEndpoint(
+        pgClient,
+        sessionService,
+        sessionRepositoryFactory,
+        authService,
+        userRepositoryFactory,
+        schema.getJsonObject("requests")
+      ))
       .addService(sessionEndpoint)
-      .addService(newGitRepositoryEndpoint(pgClient, sessionRepositoryFactory, gitRepositoryRepositoryFactory, gitRepositoryService))
+      .addService(newGitRepositoryEndpoint(
+        pgClient,
+        sessionRepositoryFactory,
+        gitRepositoryRepositoryFactory,
+        gitRepositoryService,
+        schema.getJsonObject("requests")
+      ))
       .build();
 
     rpcServer.start(
@@ -68,9 +91,8 @@ public class MainVerticle extends AbstractVerticle {
       });
   }
 
-  private LoginEndpoint newLoginEndpoint(PgPool pgClient, SessionService sessionService, SessionRepositoryFactory sessionRepositoryFactory, AuthenticationService authService, UserRepositoryFactory userRepositoryFactory) throws IOException {
-    String requestConstraints = StaticFileSystemService.readResourceToString("validation/login.json");
-    ObjectValidator requestValidator = new ObjectValidator(new JsonObject(requestConstraints));
+  private LoginEndpoint newLoginEndpoint(PgPool pgClient, SessionService sessionService, SessionRepositoryFactory sessionRepositoryFactory, AuthenticationService authService, UserRepositoryFactory userRepositoryFactory, JsonObject schema) throws IOException {
+    ObjectValidator requestValidator = new ObjectValidator(schema.getJsonObject("LoginRequest"));
     return new LoginEndpoint(
       pgClient,
       userRepositoryFactory,
@@ -84,10 +106,9 @@ public class MainVerticle extends AbstractVerticle {
   private RegisterEndpoint newRegisterEndpoint(
     PgPool pgClient,
     AuthenticationService authService,
-    UserRepositoryFactory userRepositoryFactory
-  ) throws IOException {
-    String requestConstraints = StaticFileSystemService.readResourceToString("validation/registration.json");
-    ObjectValidator requestValidator = new ObjectValidator(new JsonObject(requestConstraints));
+    UserRepositoryFactory userRepositoryFactory,
+    JsonObject schema) throws IOException {
+    ObjectValidator requestValidator = new ObjectValidator(schema.getJsonObject("RegisterRequest"));
     return new RegisterEndpoint(
       pgClient,
       userRepositoryFactory,
@@ -100,17 +121,15 @@ public class MainVerticle extends AbstractVerticle {
     PgPool pgClient,
     SessionRepositoryFactory sessionRepositoryFactory,
     GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory,
-    GitRepositoryService gitRepositoryService
+    GitRepositoryService gitRepositoryService,
+    JsonObject schema
   ) throws IOException {
     // TODO: reuse constraints for fields that are common to multiple requests
     // for example, reuse user's username in login, register, get user's git repositories
-    String createGitRepositoryConstraints = StaticFileSystemService.readResourceToString("validation/create_git_repository.json");
-    ObjectValidator createGitRepositoryRequestValidator = new ObjectValidator(new JsonObject(createGitRepositoryConstraints));
-    String getGitRepositoryRequestConstraints = StaticFileSystemService.readResourceToString("validation/get_user_git_repositories.json");
-    ObjectValidator getGitRepositoryByUserRequestValidator = new ObjectValidator(new JsonObject(getGitRepositoryRequestConstraints));
+    ObjectValidator createGitRepositoryRequestValidator = new ObjectValidator(schema.getJsonObject("CreateGitRepositoryRequest"));
+    ObjectValidator getGitRepositoryByUserRequestValidator = new ObjectValidator(schema.getJsonObject("GetGitRepositoryOfUserRequest"));
+    ObjectValidator getGitRepositoryDirectoryRequestValidator = new ObjectValidator(schema.getJsonObject("GetGitRepositoryDirectoryRequest"));
 
-    String getGitRepositoryDirectoryRequestConstraints = StaticFileSystemService.readResourceToString("validation/get_git_repository_directory.json");
-    ObjectValidator getGitRepositoryDirectoryRequestValidator = new ObjectValidator(new JsonObject(getGitRepositoryDirectoryRequestConstraints));
     return new GitRepositoryEndpoint(
       pgClient,
       gitRepositoryRepositoryFactory,

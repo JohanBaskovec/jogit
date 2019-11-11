@@ -3,13 +3,13 @@
     <app-form-group [label]="'Username'"
                     [value]="formRequest.getUsername()"
                     (valueChange)="formRequest.setUsername($event)"
-                    [constraints]="formValidationService.registration.constraints.username"
+                    [constraints]="formValidationService.registration.username"
                     [form]="form">
     </app-form-group>
     <app-form-group [label]="'Password'"
                     [value]="formRequest.getPassword()"
                     (valueChange)="formRequest.setPassword($event)"
-                    [constraints]="formValidationService.registration.constraints.password"
+                    [constraints]="formValidationService.registration.password"
                     [form]="form">
     </app-form-group>
     <app-button [disabled]="form.pristine || form.invalid || submitting"

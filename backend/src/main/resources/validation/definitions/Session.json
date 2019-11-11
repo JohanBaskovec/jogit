@@ -1,0 +1,8 @@
+[
+  {
+    "name": "id",
+    "required": true,
+    "minLength": 128,
+    "maxLength": 128
+  }
+]

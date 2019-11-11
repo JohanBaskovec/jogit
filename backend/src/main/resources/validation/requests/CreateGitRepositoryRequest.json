@@ -1,0 +1,8 @@
+{
+  "propertyConstraints": [
+    {
+      "name": "name",
+      "schema": "GitRepository.name"
+    }
+  ]
+}

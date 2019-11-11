@@ -26,6 +26,15 @@ public class PropertyConstraints {
     }
   }
 
+  public PropertyConstraints(PropertyConstraints other) {
+    this.required = other.required;
+    this.minLength = other.minLength;
+    this.maxLength = other.maxLength;
+    this.name = other.name;
+    this.getterName = other.getterName;
+    this.pattern = other.pattern;
+  }
+
   public boolean isRequired() {
     return required;
   }

@@ -17,11 +17,7 @@ import {InputLikeComponent} from './input-like/input-like.component';
 import {ButtonComponent} from './button/button.component';
 import {ErrorpageComponent} from './errorpage/errorpage.component';
 // @ts-ignore
-import registrationConstraints from '../../../backend/src/main/resources/validation/registration.json';
-// @ts-ignore
-import loginConstraints from '../../../backend/src/main/resources/validation/login.json';
-// @ts-ignore
-import createGitRepositoryConstraints from '../../../backend/src/main/resources/validation/create_git_repository.json';
+import schema from '../../../backend/src/main/resources/validation/build/schema.json';
 import {FormValidationService} from './form-validation/form-validation-service/form-validation.service';
 import {ObjectConstraints} from './form-validation/object-contraints';
 import {GitRepositoryServiceClient} from './grpc/git-repository_grpc_web_pb';
@@ -68,11 +64,7 @@ const applicationConfiguration = new ApplicationConfiguration();
       useValue: new GitRepositoryServiceClient(applicationConfiguration.getBackendUrl())
     },
     {
-      provide: FormValidationService, useValue: new FormValidationService(
-        new ObjectConstraints(registrationConstraints),
-        new ObjectConstraints(loginConstraints),
-        new ObjectConstraints(createGitRepositoryConstraints)
-      )
+      provide: FormValidationService, useValue: new FormValidationService(schema)
     },
 
   ],

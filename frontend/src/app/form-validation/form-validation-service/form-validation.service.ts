@@ -1,14 +1,20 @@
 import {Injectable} from '@angular/core';
-import {ObjectConstraints} from "../object-contraints";
+import {PropertyMap, Schema} from '../schema';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormValidationService {
+  public registration: PropertyMap = {};
+  public login: PropertyMap = {};
+  public createGitRepository: PropertyMap = {};
+
   constructor(
-    public registration: ObjectConstraints,
-    public login: ObjectConstraints,
-    public createGitRepository: ObjectConstraints,
+    public schema: Schema
   ) {
+    this.registration = schema.requests.RegisterRequest;
+    this.login = schema.requests.LoginRequest;
+    this.createGitRepository = schema.requests.CreateGitRepositoryRequest;
   }
 }

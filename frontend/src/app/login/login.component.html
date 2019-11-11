@@ -3,7 +3,7 @@
     <app-form-group [label]="'Username'"
                     [value]="formRequest.getUsername()"
                     (valueChange)="onUsernameChange($event)"
-                    [constraints]="formValidationService.login.constraints.username"
+                    [constraints]="formValidationService.login.username"
                     [form]="form"
                     #username
     >
@@ -11,7 +11,7 @@
     <app-form-group [label]="'Password'"
                     [value]="formRequest.getPassword()"
                     (valueChange)="onPasswordChange($event)"
-                    [constraints]="formValidationService.login.constraints.password"
+                    [constraints]="formValidationService.login.password"
                     [form]="form"
                     #password
     >

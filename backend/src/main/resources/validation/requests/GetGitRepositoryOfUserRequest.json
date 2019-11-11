@@ -1,0 +1,8 @@
+{
+  "propertyConstraints": [
+    {
+      "name": "username",
+      "schema": "User.username"
+    }
+  ]
+}

@@ -44,7 +44,7 @@ public class ProcessExecutorAsRootImpl implements ProcessExecutorAsRoot {
 
       OutputStream os = process.getOutputStream();
       os.write(rootPassword.getBytes());
-      os.write("\n\n".getBytes());
+      os.write("\n".getBytes());
       if (inputStrings != null) {
         for (String string : inputStrings) {
           os.write(string.getBytes());
