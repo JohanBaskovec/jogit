@@ -7,6 +7,7 @@ import {FormValidationService} from '../form-validation/form-validation-service/
 import {NgForm} from '@angular/forms';
 import {InputComponent} from '../input/input.component';
 import {Status, StatusCode} from 'grpc-web';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ import {Status, StatusCode} from 'grpc-web';
 })
 export class LoginComponent {
   formRequest: LoginRequest = new LoginRequest();
-  formSubmittedWithoutError: boolean = false;
+  formSubmittedWithoutError = false;
   submitting: boolean;
   @ViewChild('username')
   usernameComponent: InputComponent;
@@ -31,6 +32,7 @@ export class LoginComponent {
     private loginClient: LoginClient,
     private sessionService: SessionService,
     private formValidationService: FormValidationService,
+    private router: Router,
   ) {
 
   }
@@ -46,9 +48,10 @@ export class LoginComponent {
     );
     stream.on('data', (response: LoginReply) => {
       this.sessionService.setSession(response.getSession());
+      this.router.navigate(['git', response.getSession().getUserusername()]);
     });
     stream.on('error', (error: grpcWeb.Error) => {
-      if (error.code == StatusCode.UNAUTHENTICATED) {
+      if (error.code === StatusCode.UNAUTHENTICATED) {
         this.wrongUsernameOrPassword = true;
         this.usernameComponent.control.setErrors({
           other: [
