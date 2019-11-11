@@ -1,27 +1,29 @@
-<ng-container *ngIf="!formSubmittedWithoutError; else formSubmitted">
-  <form (ngSubmit)="submit()" #form="ngForm">
-    <app-form-group [label]="'Username'"
-                    [value]="formRequest.getUsername()"
-                    (valueChange)="onUsernameChange($event)"
-                    [constraints]="formValidationService.login.username"
-                    [form]="form"
-                    #username
-    >
-    </app-form-group>
-    <app-form-group [label]="'Password'"
-                    [value]="formRequest.getPassword()"
-                    (valueChange)="onPasswordChange($event)"
-                    [constraints]="formValidationService.login.password"
-                    [form]="form"
-                    #password
-    >
-    </app-form-group>
-    <app-button [disabled]="form.pristine || form.invalid || submitting"
-                [label]="'Log in'"
-                [type]="'submit'"
-    ></app-button>
-  </form>
-</ng-container>
-<ng-template #formSubmitted>
-  Logged in!
-</ng-template>
+<div class="form-container">
+  <ng-container *ngIf="!formSubmittedWithoutError; else formSubmitted">
+    <form (ngSubmit)="submit()" #form="ngForm">
+      <app-form-group [label]="'Username'"
+                      [value]="formRequest.getUsername()"
+                      (valueChange)="onUsernameChange($event)"
+                      [constraints]="formValidationService.login.username"
+                      [form]="form"
+                      #username
+      >
+      </app-form-group>
+      <app-form-group [label]="'Password'"
+                      [value]="formRequest.getPassword()"
+                      (valueChange)="onPasswordChange($event)"
+                      [constraints]="formValidationService.login.password"
+                      [form]="form"
+                      #password
+      >
+      </app-form-group>
+      <app-button [disabled]="form.pristine || form.invalid || submitting"
+                  [label]="'Log in'"
+                  [type]="'submit'"
+      ></app-button>
+    </form>
+  </ng-container>
+  <ng-template #formSubmitted>
+    Logged in!
+  </ng-template>
+</div>
