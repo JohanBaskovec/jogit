@@ -36,11 +36,10 @@ public class GitRepositoryService {
     return userRepositoryRootDirectory;
   }
 
-  private File getRepositoryDirectory(GitRepository gitRepository, String directoryPath) {
+  private File getRepositoryDirectory(GitRepository gitRepository) {
     Path userRepositoryRootPath = repositoryRoot
       .resolve(gitRepository.getUserUserName())
-      .resolve(gitRepository.getName())
-      .resolve(directoryPath);
+      .resolve(gitRepository.getName());
     return userRepositoryRootPath.toFile();
   }
 
@@ -90,18 +89,22 @@ public class GitRepositoryService {
   }
 
   public List<FileMetadata> getDirectoryContent(GitRepository repository, String directoryPath) {
+    // TODO: optimize this by caching the FileMetadatas: store the FileMetadatas in the database and
+    // add a post-receive git hook in every repository
+    // that will execute a script that remove all the FileMetadatas from the database
     if (directoryPath.startsWith("/")) {
       throw new RuntimeException("directory path must not start with '/'");
     }
-    //String directoryPathEscaped = "\"" + directoryPath.replace("\"", "\\\"") + "\"";
-    File directory = getRepositoryDirectory(repository, directoryPath);
+    File directory = getRepositoryDirectory(repository);
     if (!directory.exists()) {
       throw new RuntimeException("Can't get directory content: directory " + directory + " does not exist.");
     }
+    // TODO: do not execute as root because it allows access  to files from
+    // any repository, even when the current user doesn't have necessary permissions
     String lsOutput = processExecutorAsRoot.execute(
       new ProcessBuilder()
         .directory(directory)
-        .command("git", "ls-tree", "--full-tree", "-l", "HEAD")
+        .command("git", "ls-tree", "--full-tree", "-l", "HEAD:"+directoryPath)
     );
 
     String[] lines = lsOutput.split("\n");

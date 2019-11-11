@@ -4,8 +4,8 @@
     <ul>
       <li><a routerLink="/register">Register</a></li>
       <li><a routerLink="/login">Login</a></li>
-      <li><a *ngIf="session != null"
-             [routerLink]="['git', session.getUser().getUsername()]">My
+      <li *ngIf="session != null && session.getUser() != null">
+        <a [routerLink]="['git', session.getUser().getUsername()]">My
         account</a></li>
       <li><a [routerLink]="['./new-repository']">New repository</a></li>
     </ul>

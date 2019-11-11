@@ -1,6 +1,27 @@
-<div *ngFor="let file of files">
-  <p>Name: {{file.getName()}}</p>
-  <p>SHA1: {{file.getSha1()}}</p>
-  <p>Type: {{file.getType()}}</p>
-  <p>Size: {{file.getSize()}}</p>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+    <tr>
+      <td>Name</td>
+      <td>SHA1</td>
+      <td>Size</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let file of files">
+      <td>
+        <a *ngIf="file.getType() == 'tree'; else normalFileName"
+           [routerLink]="[file.getName()]"
+        >{{file.getName()}}</a>
+        <ng-template #normalFileName>{{file.getName()}}</ng-template>
+      </td>
+      <td>
+        {{file.getSha1()}}
+      </td>
+      <td>
+        {{file.getSize()}} bytes
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
