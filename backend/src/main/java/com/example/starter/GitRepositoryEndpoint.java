@@ -121,11 +121,7 @@ class GitRepositoryEndpoint extends GitRepositoryServiceGrpc.GitRepositoryServic
           new ErrorHandler<Session, GetGitRepositoryDirectoryReply>(requestContext) {
             @Override
             public void handleSuccess(Session session) {
-              // TODO: make a handle that automatically respond when not authenticated
-              if (session == null) {
-                requestContext.handle(Future.failedFuture(Status.UNAUTHENTICATED.asException()));
-                return;
-              }
+              // TODO: user the session to authenticate the user in the linux system
               GitRepositoryRepository gitRepositoryRepository = gitRepositoryRepositoryFactory.get(transaction);
               gitRepositoryRepository.getByUsernameAndName(
                 request.getUsername(),

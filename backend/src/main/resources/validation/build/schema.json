@@ -36,6 +36,14 @@
         "name" : "name",
         "getterName" : "getName",
         "pattern" : "^[a-zA-Z0-9]*$"
+      },
+      "sessionToken" : {
+        "required" : true,
+        "minLength" : 128,
+        "maxLength" : 128,
+        "name" : "sessionToken",
+        "getterName" : "getSessionToken",
+        "pattern" : null
       }
     },
     "LoginRequest" : {
@@ -67,7 +75,7 @@
       },
       "sessionToken" : {
         "required" : true,
-        "minLength" : 128,
+        "minLength" : 0,
         "maxLength" : 128,
         "name" : "sessionToken",
         "getterName" : "getSessionToken",
@@ -92,6 +100,16 @@
     }
   },
   "definitions" : {
+    "AnyRequest" : {
+      "sessionToken" : {
+        "required" : true,
+        "minLength" : 0,
+        "maxLength" : 128,
+        "name" : "sessionToken",
+        "getterName" : "getSessionToken",
+        "pattern" : null
+      }
+    },
     "GitRepository" : {
       "name" : {
         "required" : true,

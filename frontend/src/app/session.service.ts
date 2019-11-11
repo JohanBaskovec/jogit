@@ -3,9 +3,9 @@ import {
   GetCurrentSessionReply,
   GetCurrentSessionRequest,
   Session
-} from "./grpc/session_pb";
-import {SessionServiceClient} from "./grpc/session_grpc_web_pb";
-import {ReplaySubject} from "rxjs";
+} from './grpc/session_pb';
+import {SessionServiceClient} from './grpc/session_grpc_web_pb';
+import {ReplaySubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class SessionService {
   private session = new ReplaySubject<Session>(1);
 
   constructor(private sessionServiceClient: SessionServiceClient) {
-    this.anonymousSession.setId("anonymous");
+    this.anonymousSession.setId('anonymous');
   }
 
   refreshSession() {
@@ -34,7 +34,7 @@ export class SessionService {
           this.session.next(response.getSession());
         } else {
           this.session.next(this.anonymousSession);
-          this.setSessionToken(null);
+          this.removeSessionToken();
         }
       }
     );
@@ -58,6 +58,10 @@ export class SessionService {
   }
 
   sessionIsAnonymous(session: Session): boolean {
-    return session.getId() == "anonymous";
+    return session.getId() == 'anonymous';
+  }
+
+  private removeSessionToken() {
+    window.localStorage.removeItem("sessionToken");
   }
 }

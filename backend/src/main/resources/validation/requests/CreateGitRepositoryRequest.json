@@ -3,6 +3,10 @@
     {
       "name": "name",
       "schema": "GitRepository.name"
+    },
+    {
+      "name": "sessionToken",
+      "schema": "Session.id"
     }
   ]
 }

@@ -2,7 +2,7 @@
 // @ts-ignore
 import {NgModule} from "@angular/core";
 import {RepositoriesComponent} from "./repositories/repositories.component";
-import {UserPage} from "./user-page.component";
+import {UserPageComponent} from "./user-page.component";
 import {BrowserModule} from "@angular/platform-browser";
 import {AppRoutingModule} from "../app-routing.module";
 import {FormsModule} from "@angular/forms";
@@ -11,7 +11,7 @@ import {DirectoryComponent} from "./directory/directory.component";
 
 @NgModule({
   declarations: [
-    UserPage,
+    UserPageComponent,
     RepositoriesComponent,
     DirectoryComponent,
   ],

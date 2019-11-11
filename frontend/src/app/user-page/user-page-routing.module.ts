@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {Route, RouterModule, Routes, UrlMatcher, UrlMatchResult, UrlSegment, UrlSegmentGroup} from '@angular/router';
-import {UserPage} from './user-page.component';
+import {UserPageComponent} from './user-page.component';
 import {RepositoriesComponent} from './repositories/repositories.component';
 import {DirectoryComponent} from './directory/directory.component';
 
@@ -25,7 +25,7 @@ const directoryPathMatcher: UrlMatcher = (segments: UrlSegment[], group: UrlSegm
 const routes: Routes = [
   {
     path: 'git/:username',
-    component: UserPage,
+    component: UserPageComponent,
     children: [
       {
         path: '',

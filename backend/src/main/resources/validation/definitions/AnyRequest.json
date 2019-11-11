@@ -1,0 +1,9 @@
+[
+  {
+    "__comment": "Optional session token (values in gRPC can't be null so minLength is 0)",
+    "name": "sessionToken",
+    "required": true,
+    "minLength": 0,
+    "maxLength": 128
+  }
+]
