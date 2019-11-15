@@ -1,0 +1,12 @@
+{
+  "propertyConstraints": [
+    {
+      "name": "username",
+      "schema": "User.username"
+    },
+    {
+      "name": "sessionToken",
+      "schema": "Session.id"
+    }
+  ]
+}

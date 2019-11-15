@@ -1,12 +1,59 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.example.starter.gprc";
+option java_package = "com.jogit.server.grpc";
 option java_outer_classname = "UserProto";
 package helloworld;
 
+service UserService {
+  rpc GetSshPublicKeys (GetSshPublicKeyRequest) returns (GetSshPublicKeyReply) {}
+  rpc AddPublicSshKey (AddSshPublicKeyRequest) returns (AddSshPublicKeyReply) {}
+  rpc DeleteSshPublicKey (DeleteSshPublicKeyRequest) returns (DeleteSshPublicKeyReply) {}
+  rpc UpdateSshPublicKey (UpdateSshPublicKeyRequest) returns (UpdateSshPublicKeyReply) {}
+
+}
 message User {
   string username = 1;
   string password = 2;
   string passwordSalt = 3;
+}
+
+message GetSshPublicKeyRequest {
+  string username = 1;
+  string sessionToken = 2;
+}
+
+message GetSshPublicKeyReply {
+   repeated SshPublicKey sshPublicKeys = 1;
+}
+
+message AddSshPublicKeyRequest {
+  string username = 1;
+  string sessionToken = 2;
+  string sshPublicKey = 3;
+}
+
+message AddSshPublicKeyReply {
+}
+
+message DeleteSshPublicKeyRequest {
+  string sessionToken = 1;
+  int32 sshPublicKeyId = 2;
+}
+message DeleteSshPublicKeyReply {
+}
+
+message UpdateSshPublicKeyRequest {
+  string sessionToken = 1;
+  SshPublicKey sshPublicKey = 2;
+}
+
+message UpdateSshPublicKeyReply {
+}
+
+message SshPublicKey {
+  int32 id = 1;
+  string key = 2;
+  string userUsername = 3;
+  bool deleted = 4;
 }

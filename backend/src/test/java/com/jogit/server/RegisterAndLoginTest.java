@@ -1,14 +1,14 @@
 package com.jogit.server;
 
-import com.jogit.server.gprc.GetCurrentSessionReply;
-import com.jogit.server.gprc.GetCurrentSessionRequest;
-import com.jogit.server.gprc.LoginGrpc;
-import com.jogit.server.gprc.LoginReply;
-import com.jogit.server.gprc.LoginRequest;
-import com.jogit.server.gprc.RegisterGrpc;
-import com.jogit.server.gprc.RegisterReply;
-import com.jogit.server.gprc.RegisterRequest;
-import com.jogit.server.gprc.SessionServiceGrpc;
+import com.jogit.server.grpc.GetCurrentSessionReply;
+import com.jogit.server.grpc.GetCurrentSessionRequest;
+import com.jogit.server.grpc.LoginGrpc;
+import com.jogit.server.grpc.LoginReply;
+import com.jogit.server.grpc.LoginRequest;
+import com.jogit.server.grpc.RegisterGrpc;
+import com.jogit.server.grpc.RegisterReply;
+import com.jogit.server.grpc.RegisterRequest;
+import com.jogit.server.grpc.SessionServiceGrpc;
 import io.grpc.Channel;
 import io.grpc.stub.StreamObserver;
 import io.vertx.junit5.VertxTestContext;

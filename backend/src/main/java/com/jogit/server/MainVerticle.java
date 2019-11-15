@@ -7,6 +7,7 @@ import com.jogit.server.fs.StaticFileSystemService;
 import com.jogit.server.git.repository.GitRepositoryEndpoint;
 import com.jogit.server.git.repository.GitRepositoryRepositoryFactory;
 import com.jogit.server.git.repository.GitRepositoryService;
+import com.jogit.server.grpc.*;
 import com.jogit.server.linux.LinuxService;
 import com.jogit.server.linux.ProcessExecutorAsRoot;
 import com.jogit.server.linux.ProcessExecutorAsRootImpl;
@@ -17,6 +18,7 @@ import com.jogit.server.security.registration.RegisterEndpoint;
 import com.jogit.server.security.session.SessionEndpoint;
 import com.jogit.server.security.session.SessionRepositoryFactory;
 import com.jogit.server.security.session.SessionService;
+import com.jogit.server.security.user.UserEndpoint;
 import com.jogit.server.security.user.UserRepositoryFactory;
 import com.jogit.server.security.user.UserService;
 import com.jogit.server.validation.ObjectValidator;
@@ -33,6 +35,16 @@ import java.io.IOException;
 
 public class MainVerticle extends AbstractVerticle {
   private FileSystemService fileSystemService;
+  private SessionRepositoryFactory sessionRepositoryFactory;
+  private UserService userService;
+  private SessionService sessionService;
+  private LinuxService linuxService;
+  private UserRepositoryFactory userRepositoryFactory;
+  private AuthenticationService authService;
+  private PgPool pgClient;
+  private GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory;
+  private GitRepositoryService gitRepositoryService;
+  private JsonObject requestsSchema;
 
   @Override
   public void start(Promise<Void> startPromise) throws IOException {
@@ -43,56 +55,40 @@ public class MainVerticle extends AbstractVerticle {
     String rootPassword = config.getString("rootPassword");
     ProcessExecutorAsRoot processExecutorAsRoot = new ProcessExecutorAsRootImpl(rootPassword);
     fileSystemService = new FileSystemServiceImpl(processExecutorAsRoot);
-    GitRepositoryService gitRepositoryService = new GitRepositoryService(
+    gitRepositoryService = new GitRepositoryService(
       fileSystemService,
       processExecutorAsRoot
     );
-    PgPool pgClient = databaseService.newPgPool(vertx, config.getJsonObject("database"));
+    pgClient = databaseService.newPgPool(vertx, config.getJsonObject("database"));
 
-    UserService userService = new UserService();
-    SessionService sessionService = new SessionService(userService, prng);
-    SessionRepositoryFactory sessionRepositoryFactory = new SessionRepositoryFactory(
+    userService = new UserService();
+    sessionService = new SessionService(userService, prng);
+    sessionRepositoryFactory = new SessionRepositoryFactory(
       sessionService
     );
-    AuthenticationService authService = new AuthenticationServiceImpl(vertx);
+    authService = new AuthenticationServiceImpl(vertx);
 
-    LinuxService linuxService = new LinuxService(processExecutorAsRoot);
-    UserRepositoryFactory userRepositoryFactory = new UserRepositoryFactory(userService, linuxService);
+    linuxService = new LinuxService(processExecutorAsRoot);
+    userRepositoryFactory = new UserRepositoryFactory(userService, linuxService);
 
     SessionEndpoint sessionEndpoint = new SessionEndpoint(pgClient, sessionRepositoryFactory);
 
-    GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory = new GitRepositoryRepositoryFactory(gitRepositoryService);
+    gitRepositoryRepositoryFactory = new GitRepositoryRepositoryFactory(gitRepositoryService);
     Integer port = config.getJsonObject("server").getInteger("port");
     if (port == null) {
       startPromise.fail("port must not be null.");
       return;
     }
     JsonObject schema = new JsonObject(StaticFileSystemService.readResourceToString("validation/build/schema.json"));
+    requestsSchema = schema.getJsonObject("requests");
 
     VertxServer rpcServer = VertxServerBuilder
       .forAddress(vertx, "localhost", port)
-      .addService(newRegisterEndpoint(
-        pgClient,
-        authService,
-        userRepositoryFactory,
-        schema.getJsonObject("requests")
-      ))
-      .addService(newLoginEndpoint(
-        pgClient,
-        sessionService,
-        sessionRepositoryFactory,
-        authService,
-        userRepositoryFactory,
-        schema.getJsonObject("requests")
-      ))
+      .addService(newRegisterEndpoint())
+      .addService(newLoginEndpoint())
       .addService(sessionEndpoint)
-      .addService(newGitRepositoryEndpoint(
-        pgClient,
-        sessionRepositoryFactory,
-        gitRepositoryRepositoryFactory,
-        gitRepositoryService,
-        schema.getJsonObject("requests")
-      ))
+      .addService(newGitRepositoryEndpoint())
+      .addService(newUserEndpoint())
       .build();
 
     rpcServer.start(
@@ -106,8 +102,8 @@ public class MainVerticle extends AbstractVerticle {
       });
   }
 
-  private LoginEndpoint newLoginEndpoint(PgPool pgClient, SessionService sessionService, SessionRepositoryFactory sessionRepositoryFactory, AuthenticationService authService, UserRepositoryFactory userRepositoryFactory, JsonObject schema) throws IOException {
-    ObjectValidator requestValidator = new ObjectValidator(schema.getJsonObject("LoginRequest"));
+  private LoginEndpoint newLoginEndpoint() throws IOException {
+    ObjectValidator requestValidator = new ObjectValidator(requestsSchema.getJsonObject("LoginRequest"));
     return new LoginEndpoint(
       pgClient,
       userRepositoryFactory,
@@ -118,12 +114,8 @@ public class MainVerticle extends AbstractVerticle {
     );
   }
 
-  private RegisterEndpoint newRegisterEndpoint(
-    PgPool pgClient,
-    AuthenticationService authService,
-    UserRepositoryFactory userRepositoryFactory,
-    JsonObject schema) throws IOException {
-    ObjectValidator requestValidator = new ObjectValidator(schema.getJsonObject("RegisterRequest"));
+  private RegisterEndpoint newRegisterEndpoint(){
+    ObjectValidator requestValidator = new ObjectValidator(requestsSchema.getJsonObject("RegisterRequest"));
     return new RegisterEndpoint(
       pgClient,
       userRepositoryFactory,
@@ -132,18 +124,10 @@ public class MainVerticle extends AbstractVerticle {
     );
   }
 
-  private GitRepositoryEndpoint newGitRepositoryEndpoint(
-    PgPool pgClient,
-    SessionRepositoryFactory sessionRepositoryFactory,
-    GitRepositoryRepositoryFactory gitRepositoryRepositoryFactory,
-    GitRepositoryService gitRepositoryService,
-    JsonObject schema
-  ) throws IOException {
-    // TODO: reuse constraints for fields that are common to multiple requests
-    // for example, reuse user's username in login, register, get user's git repositories
-    ObjectValidator createGitRepositoryRequestValidator = new ObjectValidator(schema.getJsonObject("CreateGitRepositoryRequest"));
-    ObjectValidator getGitRepositoryByUserRequestValidator = new ObjectValidator(schema.getJsonObject("GetGitRepositoryOfUserRequest"));
-    ObjectValidator getGitRepositoryDirectoryRequestValidator = new ObjectValidator(schema.getJsonObject("GetGitRepositoryDirectoryRequest"));
+  private GitRepositoryEndpoint newGitRepositoryEndpoint() {
+    ObjectValidator createGitRepositoryRequestValidator = new ObjectValidator(requestsSchema.getJsonObject("CreateGitRepositoryRequest"));
+    ObjectValidator getGitRepositoryByUserRequestValidator = new ObjectValidator(requestsSchema.getJsonObject("GetGitRepositoryOfUserRequest"));
+    ObjectValidator getGitRepositoryDirectoryRequestValidator = new ObjectValidator(requestsSchema.getJsonObject("GetGitRepositoryDirectoryRequest"));
 
     return new GitRepositoryEndpoint(
       pgClient,
@@ -154,6 +138,24 @@ public class MainVerticle extends AbstractVerticle {
       getGitRepositoryDirectoryRequestValidator,
       gitRepositoryService
     );
+  }
+
+  private UserEndpoint newUserEndpoint() {
+    return new UserEndpoint(
+      pgClient,
+      gitRepositoryRepositoryFactory,
+      sessionRepositoryFactory,
+      this.createObjectValidator(UpdateSshPublicKeyRequest.class),
+      this.createObjectValidator(DeleteSshPublicKeyRequest.class),
+      this.createObjectValidator(AddSshPublicKeyRequest.class),
+      this.createObjectValidator(GetSshPublicKeyRequest.class),
+      userRepositoryFactory,
+      userService
+    );
+  }
+
+  private <T> ObjectValidator<T> createObjectValidator(Class<T> clazz) {
+    return new ObjectValidator(requestsSchema.getJsonObject(clazz.getSimpleName()));
   }
 
 }

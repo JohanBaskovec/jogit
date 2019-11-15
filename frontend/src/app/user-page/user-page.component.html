@@ -1,3 +1,9 @@
 <ul>
+  <li>
+    <a [routerLink]="['./']">Repositories</a>
+  </li>
+  <li *ngIf="showConfigurationMenu && loggedUser != null">
+    <a [routerLink]="['configuration']">Configuration</a>
+  </li>
 </ul>
 <router-outlet></router-outlet>

@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
-import {SessionService} from "./session.service";
-import {Session} from "./grpc/session_pb";
+import {SessionService} from './session.service';
+import {Session} from './grpc/session_pb';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,7 @@ import {Session} from "./grpc/session_pb";
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-  @ViewChild("myAccountLink")
+  @ViewChild('myAccountLink')
   myAccountLink: any;
   session: Session;
 

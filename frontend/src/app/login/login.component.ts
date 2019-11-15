@@ -3,9 +3,9 @@ import {LoginClient} from '../grpc/login_grpc_web_pb';
 import {LoginReply, LoginRequest} from '../grpc/login_pb';
 import * as grpcWeb from 'grpc-web';
 import {SessionService} from '../session.service';
-import {FormValidationService} from '../form-validation/form-validation-service/form-validation.service';
+import {FormValidationService} from '../form-validation-service/form-validation.service';
 import {NgForm} from '@angular/forms';
-import {InputComponent} from '../input/input.component';
+import {InputComponent} from '../form-module/input/input.component';
 import {Status, StatusCode} from 'grpc-web';
 import {Router} from '@angular/router';
 

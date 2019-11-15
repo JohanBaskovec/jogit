@@ -1,6 +1,6 @@
 package com.jogit.server.git.repository;
 
-import com.jogit.server.gprc.*;
+import com.jogit.server.grpc.*;
 import com.jogit.server.security.session.SessionRepository;
 import com.jogit.server.security.session.SessionRepositoryFactory;
 import com.jogit.server.validation.ObjectValidationResult;

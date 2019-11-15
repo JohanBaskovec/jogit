@@ -1,6 +1,6 @@
 package com.jogit.server.security.user;
 
-import com.jogit.server.gprc.User;
+import com.jogit.server.grpc.User;
 import io.vertx.sqlclient.Row;
 
 public class UserService {

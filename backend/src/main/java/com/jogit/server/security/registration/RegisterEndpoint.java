@@ -1,9 +1,9 @@
 package com.jogit.server.security.registration;
 
-import com.jogit.server.gprc.RegisterGrpc;
-import com.jogit.server.gprc.RegisterReply;
-import com.jogit.server.gprc.RegisterRequest;
-import com.jogit.server.gprc.User;
+import com.jogit.server.grpc.RegisterGrpc;
+import com.jogit.server.grpc.RegisterReply;
+import com.jogit.server.grpc.RegisterRequest;
+import com.jogit.server.grpc.User;
 import com.jogit.server.security.login.AuthenticationService;
 import com.jogit.server.security.user.UserRepository;
 import com.jogit.server.security.user.UserRepositoryFactory;

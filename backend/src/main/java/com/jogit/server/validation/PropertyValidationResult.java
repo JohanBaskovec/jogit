@@ -26,4 +26,12 @@ public class PropertyValidationResult {
   public int getErrorsCount() {
     return errors.size();
   }
+
+  @Override
+  public String toString() {
+    return "PropertyValidationResult{" +
+      "fieldName='" + fieldName + '\'' +
+      ", errors=" + errors +
+      '}';
+  }
 }

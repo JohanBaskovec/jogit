@@ -7,7 +7,9 @@
         "maxLength" : 256,
         "name" : "password",
         "getterName" : "getPassword",
-        "pattern" : null
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
       },
       "username" : {
         "required" : true,
@@ -15,7 +17,9 @@
         "maxLength" : 32,
         "name" : "username",
         "getterName" : "getUsername",
-        "pattern" : "^[a-zA-Z0-9]*$"
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
       }
     },
     "GetGitRepositoryOfUserRequest" : {
@@ -25,7 +29,31 @@
         "maxLength" : 32,
         "name" : "username",
         "getterName" : "getUsername",
-        "pattern" : "^[a-zA-Z0-9]*$"
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
+      }
+    },
+    "DeleteSshPublicKeyRequest" : {
+      "sshPublicKeyId" : {
+        "required" : false,
+        "minLength" : null,
+        "maxLength" : null,
+        "name" : "sshPublicKeyId",
+        "getterName" : "getSshPublicKeyId",
+        "pattern" : null,
+        "minimum" : 0,
+        "maximum" : 2147483647
+      },
+      "sessionToken" : {
+        "required" : true,
+        "minLength" : 128,
+        "maxLength" : 128,
+        "name" : "sessionToken",
+        "getterName" : "getSessionToken",
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
       }
     },
     "CreateGitRepositoryRequest" : {
@@ -35,7 +63,9 @@
         "maxLength" : 100,
         "name" : "name",
         "getterName" : "getName",
-        "pattern" : "^[a-zA-Z0-9]*$"
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
       },
       "sessionToken" : {
         "required" : true,
@@ -43,7 +73,63 @@
         "maxLength" : 128,
         "name" : "sessionToken",
         "getterName" : "getSessionToken",
-        "pattern" : null
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
+      }
+    },
+    "GetSshPublicKeyRequest" : {
+      "sessionToken" : {
+        "required" : true,
+        "minLength" : 128,
+        "maxLength" : 128,
+        "name" : "sessionToken",
+        "getterName" : "getSessionToken",
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
+      },
+      "username" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 32,
+        "name" : "username",
+        "getterName" : "getUsername",
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
+      }
+    },
+    "AddSshPublicKeyRequest" : {
+      "sshPublicKey" : {
+        "required" : false,
+        "minLength" : 0,
+        "maxLength" : 10000,
+        "name" : "sshPublicKey",
+        "getterName" : "getSshPublicKey",
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
+      },
+      "sessionToken" : {
+        "required" : true,
+        "minLength" : 128,
+        "maxLength" : 128,
+        "name" : "sessionToken",
+        "getterName" : "getSessionToken",
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
+      },
+      "username" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 32,
+        "name" : "username",
+        "getterName" : "getUsername",
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
       }
     },
     "LoginRequest" : {
@@ -53,7 +139,9 @@
         "maxLength" : 256,
         "name" : "password",
         "getterName" : "getPassword",
-        "pattern" : null
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
       },
       "username" : {
         "required" : true,
@@ -61,7 +149,9 @@
         "maxLength" : 32,
         "name" : "username",
         "getterName" : "getUsername",
-        "pattern" : "^[a-zA-Z0-9]*$"
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
       }
     },
     "GetGitRepositoryDirectoryRequest" : {
@@ -71,7 +161,9 @@
         "maxLength" : 100,
         "name" : "directoryPath",
         "getterName" : "getDirectoryPath",
-        "pattern" : null
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
       },
       "sessionToken" : {
         "required" : true,
@@ -79,7 +171,9 @@
         "maxLength" : 128,
         "name" : "sessionToken",
         "getterName" : "getSessionToken",
-        "pattern" : null
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
       },
       "repository" : {
         "required" : true,
@@ -87,7 +181,9 @@
         "maxLength" : 100,
         "name" : "repository",
         "getterName" : "getRepository",
-        "pattern" : "^[a-zA-Z0-9]*$"
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
       },
       "username" : {
         "required" : true,
@@ -95,7 +191,41 @@
         "maxLength" : 32,
         "name" : "username",
         "getterName" : "getUsername",
-        "pattern" : "^[a-zA-Z0-9]*$"
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
+      }
+    },
+    "UpdateSshPublicKeyRequest" : {
+      "sessionToken" : {
+        "required" : true,
+        "minLength" : 128,
+        "maxLength" : 128,
+        "name" : "sessionToken",
+        "getterName" : "getSessionToken",
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
+      },
+      "ssh" : {
+        "required" : false,
+        "minLength" : 0,
+        "maxLength" : 10000,
+        "name" : "ssh",
+        "getterName" : "getSsh",
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
+      },
+      "id" : {
+        "required" : true,
+        "minLength" : 1,
+        "maxLength" : 32,
+        "name" : "id",
+        "getterName" : "getId",
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
       }
     }
   },
@@ -107,7 +237,9 @@
         "maxLength" : 128,
         "name" : "sessionToken",
         "getterName" : "getSessionToken",
-        "pattern" : null
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
       }
     },
     "GitRepository" : {
@@ -117,7 +249,9 @@
         "maxLength" : 100,
         "name" : "name",
         "getterName" : "getName",
-        "pattern" : "^[a-zA-Z0-9]*$"
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
       }
     },
     "User" : {
@@ -127,7 +261,19 @@
         "maxLength" : 256,
         "name" : "password",
         "getterName" : "getPassword",
-        "pattern" : null
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
+      },
+      "ssh" : {
+        "required" : false,
+        "minLength" : 0,
+        "maxLength" : 10000,
+        "name" : "ssh",
+        "getterName" : "getSsh",
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
       },
       "username" : {
         "required" : true,
@@ -135,7 +281,21 @@
         "maxLength" : 32,
         "name" : "username",
         "getterName" : "getUsername",
-        "pattern" : "^[a-zA-Z0-9]*$"
+        "pattern" : "^[a-zA-Z0-9]*$",
+        "minimum" : null,
+        "maximum" : null
+      }
+    },
+    "Definitions" : {
+      "id" : {
+        "required" : false,
+        "minLength" : null,
+        "maxLength" : null,
+        "name" : "id",
+        "getterName" : "getId",
+        "pattern" : null,
+        "minimum" : 0,
+        "maximum" : 2147483647
       }
     },
     "Session" : {
@@ -145,7 +305,9 @@
         "maxLength" : 128,
         "name" : "id",
         "getterName" : "getId",
-        "pattern" : null
+        "pattern" : null,
+        "minimum" : null,
+        "maximum" : null
       }
     }
   }

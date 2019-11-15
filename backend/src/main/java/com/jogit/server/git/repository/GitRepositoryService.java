@@ -2,8 +2,8 @@ package com.jogit.server.git.repository;
 
 import com.jogit.server.linux.ProcessExecutorAsRoot;
 import com.jogit.server.fs.FileSystemService;
-import com.jogit.server.gprc.FileMetadata;
-import com.jogit.server.gprc.GitRepository;
+import com.jogit.server.grpc.FileMetadata;
+import com.jogit.server.grpc.GitRepository;
 import io.vertx.sqlclient.Row;
 
 import java.io.File;

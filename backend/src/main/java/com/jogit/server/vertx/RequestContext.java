@@ -1,5 +1,10 @@
 package com.jogit.server.vertx;
 
+import com.jogit.server.grpc.Session;
+import com.jogit.server.security.session.SessionRepository;
+import com.jogit.server.security.session.SessionRepositoryFactory;
+import com.jogit.server.validation.ObjectValidationResult;
+import com.jogit.server.validation.ObjectValidator;
 import io.grpc.Status;
 import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
@@ -67,7 +72,7 @@ public class RequestContext<RequestType, ResponseType> implements Handler<AsyncR
         public void handle(AsyncResult<Void> event) {
           if (event.failed()) {
             System.out.println("Error during rollback!");
-            failWithNonGrpcError(event.cause());
+            future.handle(Future.failedFuture(Status.INTERNAL.withDescription("Internal error.").asRuntimeException()));
           } else {
             future.handle(Future.failedFuture(t));
           }
@@ -111,5 +116,46 @@ public class RequestContext<RequestType, ResponseType> implements Handler<AsyncR
     } else {
       complete(event.result());
     }
+  }
+
+  public void validateRequestAndAuthenticate(
+    ObjectValidator<RequestType> requestValidator,
+    SessionRepositoryFactory sessionRepositoryFactory,
+    String sessionToken,
+    ErrorHandler<Session, ResponseType> errorHandler
+  ) {
+    run(() -> {
+      ObjectValidationResult objectValidationResult = requestValidator.validate(getRequest());
+      if (objectValidationResult.isInvalid()) {
+        System.out.println(objectValidationResult);
+        respondWithInvalidArgumentsError();
+        return;
+      }
+      begin((Transaction transaction) -> {
+        SessionRepository sessionRepository = sessionRepositoryFactory.get(transaction);
+        sessionRepository.getSessionById(sessionToken, new ErrorHandler<Session, ResponseType>(this) {
+          @Override
+          public void handleSuccess(Session session) {
+            if (session == null) {
+              respondWithUnauthenticatedError();
+              return;
+            }
+            errorHandler.handle(Future.succeededFuture(session));
+          }
+        });
+      });
+    });
+  }
+
+  public void respondWithUnauthenticatedError() {
+    handle(Future.failedFuture(Status.UNAUTHENTICATED.asException()));
+  }
+
+  public void respondWithInvalidArgumentsError() {
+    handle(Future.failedFuture(Status.INVALID_ARGUMENT.asRuntimeException()));
+  }
+
+  public Transaction getTransaction() {
+    return transaction;
   }
 }

@@ -1,6 +1,6 @@
 package com.jogit.server.linux;
 
-import com.jogit.server.gprc.User;
+import com.jogit.server.grpc.User;
 
 import java.util.ArrayList;
 import java.util.List;

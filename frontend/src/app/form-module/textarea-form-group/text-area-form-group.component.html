@@ -1,0 +1,11 @@
+<div class="form-group">
+  <label [for]="name">{{label}}</label>
+  <app-textarea [value]="value"
+                (valueChange)="onChange($event)"
+                [name]="name"
+                [form]="form"
+                [constraints]="constraints"
+                [label]="label"
+                #input
+  ></app-textarea>
+</div>

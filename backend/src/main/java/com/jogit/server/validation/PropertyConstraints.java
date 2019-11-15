@@ -11,6 +11,8 @@ public class PropertyConstraints {
   private String name;
   private String getterName;
   private Pattern pattern;
+  private Integer minimum;
+  private Integer maximum;
 
   public PropertyConstraints(JsonObject config) {
     Boolean required = config.getBoolean("required");
@@ -19,6 +21,8 @@ public class PropertyConstraints {
     }
     this.minLength = config.getInteger("minLength");
     this.maxLength = config.getInteger("maxLength");
+    this.minimum = config.getInteger("minimum");
+    this.maximum = config.getInteger("maximum");
     this.setName(config.getString("name"));
     String pattern = config.getString("pattern");
     if (pattern != null) {
@@ -30,6 +34,8 @@ public class PropertyConstraints {
     this.required = other.required;
     this.minLength = other.minLength;
     this.maxLength = other.maxLength;
+    this.minimum = other.minimum;
+    this.maximum = other.maximum;
     this.name = other.name;
     this.getterName = other.getterName;
     this.pattern = other.pattern;
@@ -83,5 +89,13 @@ public class PropertyConstraints {
 
   public Pattern getPattern() {
     return pattern;
+  }
+
+  public Integer getMinimum() {
+    return minimum;
+  }
+
+  public Integer getMaximum() {
+    return maximum;
   }
 }

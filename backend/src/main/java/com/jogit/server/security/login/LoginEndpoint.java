@@ -2,11 +2,11 @@ package com.jogit.server.security.login;
 
 import com.jogit.server.vertx.RequestContext;
 import com.jogit.server.security.user.UserRepositoryFactory;
-import com.jogit.server.gprc.LoginGrpc;
-import com.jogit.server.gprc.LoginReply;
-import com.jogit.server.gprc.LoginRequest;
-import com.jogit.server.gprc.Session;
-import com.jogit.server.gprc.User;
+import com.jogit.server.grpc.LoginGrpc;
+import com.jogit.server.grpc.LoginReply;
+import com.jogit.server.grpc.LoginRequest;
+import com.jogit.server.grpc.Session;
+import com.jogit.server.grpc.User;
 import com.jogit.server.security.session.SessionRepository;
 import com.jogit.server.security.session.SessionRepositoryFactory;
 import com.jogit.server.security.session.SessionService;

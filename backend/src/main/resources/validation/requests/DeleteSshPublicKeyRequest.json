@@ -1,0 +1,12 @@
+{
+  "propertyConstraints": [
+    {
+      "name": "sshPublicKeyId",
+      "schema": "Definitions.id"
+    },
+    {
+      "name": "sessionToken",
+      "schema": "Session.id"
+    }
+  ]
+}

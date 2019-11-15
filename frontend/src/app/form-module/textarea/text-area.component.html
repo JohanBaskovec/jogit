@@ -1,0 +1,36 @@
+<textarea [ngModel]="value"
+          (ngModelChange)="onChange($event)"
+          [required]="required"
+          class="form-control"
+          [class.form-control-error]="textarea.invalid && (textarea.dirty || textarea.touched)"
+          [class.form-control-valid]="textarea.valid"
+          [class.form-control-neutral]="textarea.pristine"
+          [id]="name"
+          [name]="name"
+          [maxlength]="'' + maxLength"
+          [minlength]="'' + minLength"
+          [pattern]="pattern"
+          #textarea="ngModel"></textarea>
+<div *ngIf="textarea.invalid && (textarea.dirty || textarea.touched)"
+     class="form-control-errors-container error">
+
+  <div *ngIf="textarea.errors.required">
+    {{label}} required.
+  </div>
+  <div *ngIf="textarea.errors.minlength">
+    {{label}} must be at least {{minLength}} characters long.
+  </div>
+  <div *ngIf="textarea.errors.maxlength">
+    {{label}} must be at most {{minLength}} characters long.
+  </div>
+  <div *ngIf="textarea.errors.pattern">
+    <!-- TODO: display custom error messages -->
+    {{label}} must match pattern {{pattern}}.
+  </div>
+  <div *ngIf="textarea.errors.other">
+    <ng-container *ngFor="let error of textarea.errors.other">
+      {{error}}
+    </ng-container>
+  </div>
+
+</div>

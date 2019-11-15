@@ -3,6 +3,7 @@ import {Route, RouterModule, Routes, UrlMatcher, UrlMatchResult, UrlSegment, Url
 import {UserPageComponent} from './user-page.component';
 import {RepositoriesComponent} from './repositories/repositories.component';
 import {DirectoryComponent} from './directory/directory.component';
+import {ConfigurationComponent} from './configuration/configuration.component';
 
 const directoryPathMatcher: UrlMatcher = (segments: UrlSegment[], group: UrlSegmentGroup, route: Route): UrlMatchResult => {
   const length = segments.length;
@@ -30,6 +31,10 @@ const routes: Routes = [
       {
         path: '',
         component: RepositoriesComponent,
+      },
+      {
+        path: 'configuration',
+        component: ConfigurationComponent
       },
       {
         matcher: directoryPathMatcher,

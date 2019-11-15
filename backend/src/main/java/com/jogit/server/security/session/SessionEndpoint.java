@@ -2,10 +2,10 @@ package com.jogit.server.security.session;
 
 import com.jogit.server.vertx.ErrorHandler;
 import com.jogit.server.vertx.RequestContext;
-import com.jogit.server.gprc.GetCurrentSessionReply;
-import com.jogit.server.gprc.GetCurrentSessionRequest;
-import com.jogit.server.gprc.Session;
-import com.jogit.server.gprc.SessionServiceGrpc;
+import com.jogit.server.grpc.GetCurrentSessionReply;
+import com.jogit.server.grpc.GetCurrentSessionRequest;
+import com.jogit.server.grpc.Session;
+import com.jogit.server.grpc.SessionServiceGrpc;
 import io.vertx.core.Future;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Transaction;

@@ -34,4 +34,12 @@ public class ObjectValidationResult {
   public boolean isInvalid() {
     return !isValid();
   }
+
+  @Override
+  public String toString() {
+    return "ObjectValidationResult{" +
+      "globalErrors=" + globalErrors +
+      ", propertyValidationResultMap=" + propertyValidationResultMap +
+      '}';
+  }
 }

@@ -2,8 +2,8 @@ package com.jogit.server.security.login;
 
 import com.jogit.server.security.hashing.PgHashStrategy;
 import com.jogit.server.security.user.UserRepository;
-import com.jogit.server.gprc.LoginRequest;
-import com.jogit.server.gprc.User;
+import com.jogit.server.grpc.LoginRequest;
+import com.jogit.server.grpc.User;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;

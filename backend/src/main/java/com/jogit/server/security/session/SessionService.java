@@ -1,7 +1,7 @@
 package com.jogit.server.security.session;
 
 import com.jogit.server.security.user.UserService;
-import com.jogit.server.gprc.Session;
+import com.jogit.server.grpc.Session;
 import io.vertx.ext.auth.PRNG;
 import io.vertx.sqlclient.Row;
 

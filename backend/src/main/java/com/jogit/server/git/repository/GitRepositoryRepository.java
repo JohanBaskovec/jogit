@@ -1,7 +1,7 @@
 package com.jogit.server.git.repository;
 
 import com.jogit.server.fs.StaticFileSystemService;
-import com.jogit.server.gprc.GitRepository;
+import com.jogit.server.grpc.GitRepository;
 import com.jogit.server.vertx.ErrorHandler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;

@@ -11,18 +11,21 @@ import {RegisterClient} from './grpc/register_grpc_web_pb';
 import {LoginClient} from './grpc/login_grpc_web_pb';
 import {ApplicationConfiguration} from './ApplicationConfiguration';
 import {SessionServiceClient} from './grpc/session_grpc_web_pb';
-import {InputComponent} from './input/input.component';
-import {FormGroupComponent} from './form-group/form-group.component';
-import {InputLikeComponent} from './input-like/input-like.component';
-import {ButtonComponent} from './button/button.component';
+import {InputComponent} from './form-module/input/input.component';
+import {FormGroupComponent} from './form-module/form-group/form-group.component';
+import {InputLikeComponent} from './form-module/input-like/input-like.component';
+import {ButtonComponent} from './form-module/button/button.component';
 import {ErrorpageComponent} from './errorpage/errorpage.component';
 // @ts-ignore
 import schema from '../../../backend/src/main/resources/validation/build/schema.json';
-import {FormValidationService} from './form-validation/form-validation-service/form-validation.service';
-import {ObjectConstraints} from './form-validation/object-contraints';
+import {FormValidationService} from './form-validation-service/form-validation.service';
 import {GitRepositoryServiceClient} from './grpc/git-repository_grpc_web_pb';
 import {UserPageModule} from './user-page/user-page.module';
 import {CreateRepositoryComponent} from './create-repository/create-repository.component';
+import {TextAreaComponent} from './form-module/textarea/text-area.component';
+import {TextAreaFormGroupComponent} from './form-module/textarea-form-group/text-area-form-group.component';
+import {AppFormModule} from './form-module/app-form.module';
+import {UserServiceClient} from './grpc/user_grpc_web_pb';
 
 const applicationConfiguration = new ApplicationConfiguration();
 
@@ -33,10 +36,6 @@ const applicationConfiguration = new ApplicationConfiguration();
     LoginComponent,
     RegisterComponent,
     AccountComponent,
-    InputComponent,
-    FormGroupComponent,
-    InputLikeComponent,
-    ButtonComponent,
     ErrorpageComponent,
     CreateRepositoryComponent,
   ],
@@ -44,7 +43,8 @@ const applicationConfiguration = new ApplicationConfiguration();
     BrowserModule,
     UserPageModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    AppFormModule
   ],
   providers: [
     {
@@ -64,9 +64,15 @@ const applicationConfiguration = new ApplicationConfiguration();
       useValue: new GitRepositoryServiceClient(applicationConfiguration.getBackendUrl())
     },
     {
+      provide: UserServiceClient,
+      useValue: new UserServiceClient(applicationConfiguration.getBackendUrl())
+    },
+    {
       provide: FormValidationService, useValue: new FormValidationService(schema)
     },
 
+  ],
+  exports: [
   ],
   bootstrap: [AppComponent]
 })

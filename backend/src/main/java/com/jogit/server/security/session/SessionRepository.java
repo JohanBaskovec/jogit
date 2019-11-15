@@ -2,7 +2,7 @@ package com.jogit.server.security.session;
 
 import com.jogit.server.vertx.ErrorHandler;
 import com.jogit.server.fs.StaticFileSystemService;
-import com.jogit.server.gprc.Session;
+import com.jogit.server.grpc.Session;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;

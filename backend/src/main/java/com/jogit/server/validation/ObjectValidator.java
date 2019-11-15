@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class ObjectValidator {
+public class ObjectValidator<T> {
   private final JsonObject config;
   private final List<PropertyConstraints> propertiesConstraints = new ArrayList<>();
 
@@ -25,7 +25,7 @@ public class ObjectValidator {
     }
   }
 
-  public ObjectValidationResult validate(Object object) {
+  public ObjectValidationResult validate(T object) {
     ObjectValidationResult objectValidationResult = new ObjectValidationResult();
     for (PropertyConstraints propertyConstraints : propertiesConstraints) {
       PropertyValidationResult propertyValidationResult = new PropertyValidationResult(propertyConstraints.getName());
@@ -60,13 +60,63 @@ public class ObjectValidator {
                 + propertyConstraints.getMinLength());
             }
           }
+          if (propertyConstraints.getMaximum() != null) {
+            boolean moreThanMax = false;
+            if (value instanceof Integer) {
+              Integer v = (Integer) value;
+              if (v > propertyConstraints.getMaximum()) {
+                moreThanMax = true;
+              }
+            } else if (value instanceof Long) {
+              Long v = (Long) value;
+              if (v > propertyConstraints.getMaximum()) {
+                moreThanMax = true;
+              }
+            } else if (value instanceof Double) {
+              Double v = (Double) value;
+              if (v > propertyConstraints.getMaximum()) {
+                moreThanMax = true;
+              }
+            }
+            if (moreThanMax) {
+              propertyValidationResult.addError("Property "
+                + propertyConstraints.getName() + " value is over "
+                + " the maximum of "
+                + propertyConstraints.getMaximum());
+            }
+          }
+          if (propertyConstraints.getMinLength() != null) {
+            boolean lessThanMin = false;
+            if (value instanceof Integer) {
+              Integer v = (Integer) value;
+              if (v < propertyConstraints.getMaximum()) {
+                lessThanMin = true;
+              }
+            } else if (value instanceof Long) {
+              Long v = (Long) value;
+              if (v < propertyConstraints.getMaximum()) {
+                lessThanMin = true;
+              }
+            } else if (value instanceof Double) {
+              Double v = (Double) value;
+              if (v < propertyConstraints.getMaximum()) {
+                lessThanMin = true;
+              }
+            }
+            if (lessThanMin) {
+              propertyValidationResult.addError("Property "
+                + propertyConstraints.getName() + " value is below "
+                + " the minimum of "
+                + propertyConstraints.getMinimum());
+            }
+          }
           if (propertyConstraints.getPattern() != null) {
             String valueAsString = (String) value;
             Matcher matcher = propertyConstraints.getPattern().matcher(valueAsString);
             if (!matcher.matches()) {
               propertyValidationResult.addError("Property "
-              + propertyConstraints.getName() + " does not match pattern "
-              + propertyConstraints.getPattern().toString());
+                + propertyConstraints.getName() + " does not match pattern "
+                + propertyConstraints.getPattern().toString());
             }
           }
         }

@@ -1,0 +1,16 @@
+<div>
+  <div *ngFor="let key of sshPublicKeys; let i = index">
+    {{key.getKey()}} <button type="button" (click)="delete(key, i)">Delete</button>
+  </div>
+</div>
+<div class="form-container">
+  <form #form="ngForm" (ngSubmit)="submit()">
+    <app-textarea-form-group (valueChange)="request.setSshpublickey($event)"
+                             [value]="request.getSshpublickey()"
+                             [constraints]="userConstraints.ssh"
+                             [form]="form"
+                             [label]="'Public SSH key'"
+    ></app-textarea-form-group>
+    <button type="submit">Save</button>
+  </form>
+</div>
